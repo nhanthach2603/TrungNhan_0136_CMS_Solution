@@ -1,0 +1,10 @@
+﻿## Bỏ qua thư mục cấu hình ẩn của Visual Studio đang khóa file của bạn
+.vs/
+
+## Bỏ qua các thư mục chứa file build biên dịch sinh ra liên tục
+[Bb]in/
+[Oo]bj/
+
+## Bỏ qua file cấu hình người dùng cá nhân
+*.user
+*.suo
