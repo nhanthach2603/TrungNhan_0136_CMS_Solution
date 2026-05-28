@@ -34,6 +34,14 @@
                 <div class="p-3 text-white text-center border-bottom border-secondary">
                     <h5 class="mb-0"><i class="bi bi-gear-fill"></i> Admin Panel</h5>
                 </div>
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <div class="p-3 text-white border-bottom border-secondary">
+                        <small class="text-muted">Xin chào,</small><br />
+                        <strong>@User.FindFirst("FullName")?.Value</strong><br />
+                        <span class="badge bg-info">@User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value</span>
+                    </div>
+                }
                 <nav class="nav flex-column">
                     <a class="nav-link" asp-controller="Home" asp-action="Index">
                         <i class="bi bi-speedometer2"></i> Bảng điều khiển
@@ -62,6 +70,12 @@
                     <a class="nav-link" href="#">
                         <i class="bi bi-receipt"></i> OrderDetail
                     </a>
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        <a class="nav-link text-danger mt-3 border-top border-secondary pt-3" asp-controller="Account" asp-action="Logout">
+                            <i class="bi bi-box-arrow-left"></i> Đăng xuất
+                        </a>
+                    }
                 </nav>
             </div>
 
