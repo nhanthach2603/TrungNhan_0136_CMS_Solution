@@ -1,0 +1,41 @@
+@{
+    Layout = "_LayoutAdmin";
+}
+@model CMS.Data.Entities.User
+
+<div class="container mt-4">
+    <h2 class="text-warning">CHỈNH SỬA THÀNH VIÊN</h2>
+    <hr />
+
+    <form asp-action="Edit" method="post">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Tên đăng nhập:</label>
+            <input asp-for="Username" class="form-control" readonly />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Mật khẩu mới (để trống nếu không đổi):</label>
+            <input type="password" name="NewPassword" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Họ và tên:</label>
+            <input asp-for="FullName" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Quyền hạn:</label>
+            <select asp-for="Role" class="form-select">
+                <option value="Admin">Admin</option>
+                <option value="Editor">Editor</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-warning">
+            <i class="bi bi-save"></i> Cập nhật
+        </button>
+        <a asp-action="Index" class="btn btn-secondary">Hủy bỏ</a>
+    </form>
+</div>
