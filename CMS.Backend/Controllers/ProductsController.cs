@@ -42,8 +42,8 @@ namespace CMS.Backend.Controllers
             return Ok(products);
         }
 
-        // GET: api/products/categoryproduct/{categoryProductId}
-        [HttpGet("categoryproduct/{categoryProductId}")]
+        // GET: api/products/category/{categoryProductId}
+        [HttpGet("category/{categoryProductId}")]
         public async Task<IActionResult> GetByCategoryProduct(int categoryProductId)
         {
             var products = await _context.Products
