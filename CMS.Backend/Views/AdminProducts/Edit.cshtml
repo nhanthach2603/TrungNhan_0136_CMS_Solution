@@ -1,0 +1,48 @@
+@{
+    Layout = "_LayoutAdmin";
+}
+@model CMS.Data.Entities.Product
+
+<h2 class="text-primary">Sửa sản phẩm</h2>
+<hr />
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="ImageUrl" />
+
+    <div class="mb-3">
+        <label class="form-label fw-bold">Tên sản phẩm:</label>
+        <input asp-for="Name" class="form-control" required />
+    </div>
+    <div class="mb-3">
+        <label class="form-label fw-bold">Mô tả:</label>
+        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">Giá bán (VND):</label>
+            <input asp-for="Price" type="number" step="1000" class="form-control" required />
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">Số lượng tồn kho:</label>
+            <input asp-for="StockQuantity" type="number" class="form-control" required />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label class="form-label fw-bold">Danh mục:</label>
+        <select asp-for="CategoryProductId" asp-items="@ViewBag.CategoryList" class="form-select" required></select>
+    </div>
+    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+    {
+        <div class="mb-2">
+            <label class="form-label fw-bold">Hình hiện tại:</label><br />
+            <img src="@Model.ImageUrl" style="width:120px;height:120px;object-fit:cover" />
+        </div>
+    }
+    <div class="mb-3">
+        <label class="form-label fw-bold">Đổi hình (bỏ trống nếu giữ):</label>
+        <input type="file" name="uploadImage" class="form-control" accept="image/*" />
+    </div>
+    <button type="submit" class="btn btn-success"><i class="bi bi-save"></i> Cập nhật</button>
+    <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+</form>
