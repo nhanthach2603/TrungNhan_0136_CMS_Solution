@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import CategoryProductList from './components/CategoryProductList';
 import ProductList from './components/ProductList';
 import PostList from './components/PostList';
+import BlogCategoryList from './components/BlogCategoryList';
 import LoginForm from './components/LoginForm';
 import RegisterForm from './components/RegisterForm';
 import './App.css';
@@ -57,7 +58,14 @@ function App() {
                 </section>
 
                 <section id="blog" className="mb-5">
-                    <PostList />
+                    <div className="row">
+                        <div className="col-md-4">
+                            <BlogCategoryList />
+                        </div>
+                        <div className="col-md-8">
+                            <PostList />
+                        </div>
+                    </div>
                 </section>
 
                 <section id="login" className="mb-5">
