@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import categoryProductService from '../services/categoryProductService';
 
-const CategoryProductList = () => {
+const CategoryProductList = ({ onSelectCategory, selectedId }) => {
     const [categoryProducts, setCategoryProducts] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -35,6 +35,13 @@ const CategoryProductList = () => {
 
             <div className="card-body p-0">
                 <div className="list-group list-group-flush">
+                    <button
+                        type="button"
+                        className={`list-group-item list-group-item-action d-flex justify-content-between align-items-center px-4 py-3 ${selectedId == null ? 'active bg-primary text-white' : ''}`}
+                        onClick={() => onSelectCategory(null)}
+                    >
+                        <span className="font-weight-normal">Tất cả sản phẩm</span>
+                    </button>
                     {categoryProducts.length === 0 ? (
                         <div className="p-4 text-center text-muted">Không có danh mục nào.</div>
                     ) : (
@@ -42,11 +49,11 @@ const CategoryProductList = () => {
                             <button
                                 key={item.id}
                                 type="button"
-                                className="list-group-item list-group-item-action d-flex justify-content-between align-items-center px-4 py-3 transition-all"
-                                style={{ fontSize: '0.95rem', color: '#495057' }}
+                                className={`list-group-item list-group-item-action d-flex justify-content-between align-items-center px-4 py-3 ${selectedId === item.id ? 'active bg-primary text-white' : ''}`}
+                                onClick={() => onSelectCategory(item.id)}
                             >
                                 <span className="font-weight-normal">{item.name}</span>
-                                <i className="fa-solid fa-chevron-right text-muted" style={{ fontSize: '0.8rem', opacity: 0.5 }}></i>
+                                <i className="fa-solid fa-chevron-right" style={{ fontSize: '0.8rem', opacity: 0.5 }}></i>
                             </button>
                         ))
                     )}

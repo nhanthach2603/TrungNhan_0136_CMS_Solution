@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import CategoryProductList from './components/CategoryProductList';
 import ProductList from './components/ProductList';
 import PostList from './components/PostList';
@@ -7,6 +7,7 @@ import RegisterForm from './components/RegisterForm';
 import './App.css';
 
 function App() {
+    const [selectedCategoryId, setSelectedCategoryId] = useState(null);
     return (
         <div>
             <nav className="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
@@ -43,11 +44,14 @@ function App() {
                 <section id="shop" className="mb-5">
                     <div className="row">
                         <div className="col-md-3 mb-4">
-                            <CategoryProductList />
+                            <CategoryProductList
+                                onSelectCategory={setSelectedCategoryId}
+                                selectedId={selectedCategoryId}
+                            />
                         </div>
                         <div className="col-md-9">
                             <h4 className="mb-4 text-uppercase text-secondary font-weight-bold">Bộ sưu tập mới nhất</h4>
-                            <ProductList />
+                            <ProductList categoryId={selectedCategoryId} />
                         </div>
                     </div>
                 </section>
