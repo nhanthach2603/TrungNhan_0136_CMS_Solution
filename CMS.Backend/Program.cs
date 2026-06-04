@@ -20,14 +20,15 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.AccessDeniedPath = "/Account/AccessDenied";
     });
 
-// Đăng ký chính sách CORS (Cho phép ReactJS kết nối)
+// Đăng ký chính sách CORS (Cho phép ReactJS ở port 3000 gọi tới)
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
+    options.AddPolicy("AllowReactApp", policy =>
     {
-        policy.AllowAnyOrigin()
+        policy.WithOrigins("http://localhost:3000")
+              .AllowAnyHeader()
               .AllowAnyMethod()
-              .AllowAnyHeader();
+              .AllowCredentials();
     });
 });
 
@@ -54,7 +55,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 // Kích hoạt CORS (phải trước Authorization)
-app.UseCors("AllowAll");
+app.UseCors("AllowReactApp");
 
 // Kích hoạt Middleware Xác thực (phải trước UseAuthorization)
 app.UseAuthentication();
