@@ -13,7 +13,7 @@ using CMS.Data.Entities;
 
 namespace CMS.Backend.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin,NhanVien")]
     public class PostController : Controller
     {
         private readonly ApplicationDbContext _context;
