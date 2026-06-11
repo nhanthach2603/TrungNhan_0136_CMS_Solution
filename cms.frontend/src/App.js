@@ -10,16 +10,15 @@ function App() {
 
     return (
         <div className="container mt-5">
-            {/* PHẦN HEADER */}
-            <header className="pb-3 mb-4 border-bottom">
+            <header className="pb-3 mb-4 border-bottom d-flex justify-content-between align-items-center">
                 <span className="fs-4 font-weight-bold text-dark text-uppercase">
-                    👗 FASHION BOUTIQUE - THỜI TRANG CÔNG SỞ & DẠ HỘI
+                    👗 Fashion Boutique - Hệ Thống Quản Trị Nội Dung & Bán Hàng
                 </span>
+                <span className="badge badge-success px-3 py-2">Học Phần Chuyên Đề ASP.NET + ReactJS</span>
             </header>
 
             <div className="row">
-                {/* CỘT TRÁI: Danh mục SP + Chuyên mục blog */}
-                <div className="col-md-3">
+                <div className="col-md-4">
                     <CategoryProductList
                         onSelectCategory={setSelectedCategoryId}
                         selectedId={selectedCategoryId}
@@ -27,20 +26,8 @@ function App() {
                     <BlogCategoryList />
                 </div>
 
-                {/* CỘT PHẢI: Sản phẩm + Tin tức */}
-                <div className="col-md-9">
-                    <div className="jumbotron bg-light border p-5 rounded shadow-sm mb-4">
-                        <h2 className="display-5 font-weight-normal">Chào mừng đến với Fashion Boutique!</h2>
-                        <p className="lead mt-3 text-secondary">
-                            Khối dữ liệu bên thanh điều hướng trái đang được tải <strong>Real-time</strong> trực tiếp từ Database SQL Server thông qua ASP.NET Core Web API.
-                        </p>
-                        <hr className="my-4" />
-                        <p className="text-muted">Hãy đảm bảo rằng bạn đã kích hoạt CORS ở Backend để dữ liệu không bị chặn hiển thị.</p>
-                    </div>
-
-                    <h4 className="mb-4 text-uppercase text-secondary font-weight-bold">
-                        <i className="fa-solid fa-fire text-danger mr-2"></i>Bộ sưu tập mới nhất
-                    </h4>
+                <div className="col-md-8">
+                    <h4 className="mb-4 text-uppercase text-secondary font-weight-bold">Bộ sưu tập mới nhất</h4>
                     <ProductList
                         categoryId={selectedCategoryId}
                     />
@@ -49,6 +36,10 @@ function App() {
                     <PostList />
                 </div>
             </div>
+
+            <footer className="pt-3 mt-5 text-muted border-top text-center small">
+                <p>© 2026 - Đồ án thực hành phân tầng ASP.NET Core Web API kết hợp ReactJS Client-side</p>
+            </footer>
         </div>
     );
 }
