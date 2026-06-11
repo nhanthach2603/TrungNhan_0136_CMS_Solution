@@ -17,44 +17,35 @@ function App() {
                 </span>
             </header>
 
-            {/* PHẦN 1: DANH MỤC SẢN PHẨM (TRÁI) + JUMBOTRON (PHẢI) */}
             <div className="row">
+                {/* CỘT TRÁI: Danh mục SP + Chuyên mục blog */}
                 <div className="col-md-3">
                     <CategoryProductList
                         onSelectCategory={setSelectedCategoryId}
                         selectedId={selectedCategoryId}
                     />
+                    <BlogCategoryList />
                 </div>
+
+                {/* CỘT PHẢI: Sản phẩm + Tin tức */}
                 <div className="col-md-9">
-                    <div className="jumbotron bg-light border p-5 rounded shadow-sm">
+                    <div className="jumbotron bg-light border p-5 rounded shadow-sm mb-4">
                         <h2 className="display-5 font-weight-normal">Chào mừng đến với Fashion Boutique!</h2>
                         <p className="lead mt-3 text-secondary">
-                            Khối dữ liệu bên thanh điều hướng trái đang được tải <strong>Real-time</strong> trực tiếp từ bảng <strong>CategoryProduct</strong> trong Database SQL Server thông qua nền tảng ASP.NET Core Web API.
+                            Khối dữ liệu bên thanh điều hướng trái đang được tải <strong>Real-time</strong> trực tiếp từ Database SQL Server thông qua ASP.NET Core Web API.
                         </p>
                         <hr className="my-4" />
                         <p className="text-muted">Hãy đảm bảo rằng bạn đã kích hoạt CORS ở Backend để dữ liệu không bị chặn hiển thị.</p>
                     </div>
-                </div>
-            </div>
 
-            {/* PHẦN 2: DANH SÁCH SẢN PHẨM */}
-            <div className="row">
-                <div className="col-md-12">
                     <h4 className="mb-4 text-uppercase text-secondary font-weight-bold">
                         <i className="fa-solid fa-fire text-danger mr-2"></i>Bộ sưu tập mới nhất
                     </h4>
                     <ProductList
                         categoryId={selectedCategoryId}
                     />
-                </div>
-            </div>
 
-            {/* PHẦN 3: BLOG & CHUYÊN MỤC TIN TỨC */}
-            <div className="row mt-5">
-                <div className="col-md-4">
-                    <BlogCategoryList />
-                </div>
-                <div className="col-md-8">
+                    <hr className="my-5" />
                     <PostList />
                 </div>
             </div>
