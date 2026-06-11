@@ -1,0 +1,69 @@
+@model IEnumerable<CMS.Data.Entities.BannerImage>
+@{ ViewData["Title"] = "Quản lý Banner"; Layout = "~/Views/Shared/_LayoutAdmin.cshtml"; }
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4><i class="bi bi-image"></i> Quản lý Banner</h4>
+    <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Thêm mới</a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<table class="table table-bordered table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th width="60">ID</th>
+            <th>Ảnh</th>
+            <th>Tên</th>
+            <th>Link</th>
+            <th width="80">Thứ tự</th>
+            <th width="80">Hiển thị</th>
+            <th width="150">Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+                    {
+                        <img src="@item.ImageUrl" alt="@item.Name" style="height:60px;border-radius:6px;object-fit:cover;" />
+                    }
+                    else
+                    {
+                        <span class="text-muted">Không có ảnh</span>
+                    }
+                </td>
+                <td>@item.Name</td>
+                <td><small>@item.LinkUrl</small></td>
+                <td class="text-center">@item.SortOrder</td>
+                <td class="text-center">
+                    @if (item.IsActive)
+                    {
+                        <span class="badge bg-success">Bật</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">Tắt</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline"
+                          onsubmit="return confirm('Xóa banner này?')">
+                        <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

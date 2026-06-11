@@ -49,7 +49,7 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = "swagger";
 });
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection(); // Tắt để React frontend gọi HTTP API trực tiếp
 app.UseStaticFiles();
 
 app.UseRouting();

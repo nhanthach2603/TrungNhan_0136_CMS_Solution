@@ -21,6 +21,14 @@ namespace CMS.Backend.Controllers
             _context = context;
         }
 
+        private string GetFullImageUrl(string? imageUrl)
+        {
+            if (string.IsNullOrEmpty(imageUrl)) return imageUrl!;
+            if (imageUrl.StartsWith("http")) return imageUrl;
+            var request = HttpContext.Request;
+            return $"{request.Scheme}://{request.Host}{imageUrl}";
+        }
+
         // GET: api/posts
         [HttpGet]
         public async Task<IActionResult> GetAll()
@@ -37,7 +45,16 @@ namespace CMS.Backend.Controllers
                 })
                 .ToListAsync();
 
-            return Ok(posts);
+            var result = posts.Select(p => new
+            {
+                p.Id,
+                p.Title,
+                ImageUrl = GetFullImageUrl(p.ImageUrl),
+                p.CreatedDate,
+                p.CategoryName
+            });
+
+            return Ok(result);
         }
 
         // GET: api/posts/category/{categoryId}
@@ -57,7 +74,16 @@ namespace CMS.Backend.Controllers
                 })
                 .ToListAsync();
 
-            return Ok(posts);
+            var result = posts.Select(p => new
+            {
+                p.Id,
+                p.Title,
+                ImageUrl = GetFullImageUrl(p.ImageUrl),
+                p.CreatedDate,
+                p.CategoryName
+            });
+
+            return Ok(result);
         }
 
         // GET: api/posts/{id}
@@ -83,7 +109,16 @@ namespace CMS.Backend.Controllers
                 return NotFound(new { message = "Không tìm thấy bài viết" });
             }
 
-            return Ok(post);
+            return Ok(new
+            {
+                post.Id,
+                post.Title,
+                post.Content,
+                ImageUrl = GetFullImageUrl(post.ImageUrl),
+                post.CreatedDate,
+                post.CategoryId,
+                post.CategoryName
+            });
         }
     }
 }

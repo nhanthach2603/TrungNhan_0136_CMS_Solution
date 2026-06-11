@@ -21,6 +21,14 @@ namespace CMS.Backend.Controllers
             _context = context;
         }
 
+        private string GetFullImageUrl(string? imageUrl)
+        {
+            if (string.IsNullOrEmpty(imageUrl)) return imageUrl!;
+            if (imageUrl.StartsWith("http")) return imageUrl;
+            var request = HttpContext.Request;
+            return $"{request.Scheme}://{request.Host}{imageUrl}";
+        }
+
         // GET: api/products
         [HttpGet]
         public async Task<IActionResult> GetAll()
@@ -34,12 +42,25 @@ namespace CMS.Backend.Controllers
                     p.Description,
                     p.Price,
                     p.StockQuantity,
-                    p.ImageUrl,
+                    ImageUrl = p.ImageUrl,
+                    p.CategoryProductId,
                     CategoryProductName = p.CategoryProduct.Name
                 })
                 .ToListAsync();
 
-            return Ok(products);
+            var result = products.Select(p => new
+            {
+                p.Id,
+                p.Name,
+                p.Description,
+                p.Price,
+                p.StockQuantity,
+                ImageUrl = GetFullImageUrl(p.ImageUrl),
+                p.CategoryProductId,
+                p.CategoryProductName
+            });
+
+            return Ok(result);
         }
 
         // GET: api/products/category/{categoryProductId}
@@ -56,12 +77,25 @@ namespace CMS.Backend.Controllers
                     p.Description,
                     p.Price,
                     p.StockQuantity,
-                    p.ImageUrl,
+                    ImageUrl = p.ImageUrl,
+                    p.CategoryProductId,
                     CategoryProductName = p.CategoryProduct.Name
                 })
                 .ToListAsync();
 
-            return Ok(products);
+            var result = products.Select(p => new
+            {
+                p.Id,
+                p.Name,
+                p.Description,
+                p.Price,
+                p.StockQuantity,
+                ImageUrl = GetFullImageUrl(p.ImageUrl),
+                p.CategoryProductId,
+                p.CategoryProductName
+            });
+
+            return Ok(result);
         }
 
         // GET: api/products/{id}
@@ -77,7 +111,7 @@ namespace CMS.Backend.Controllers
                     p.Description,
                     p.Price,
                     p.StockQuantity,
-                    p.ImageUrl,
+                    ImageUrl = p.ImageUrl,
                     p.CategoryProductId,
                     CategoryProductName = p.CategoryProduct.Name
                 })
@@ -88,7 +122,17 @@ namespace CMS.Backend.Controllers
                 return NotFound(new { message = "Không tìm thấy sản phẩm" });
             }
 
-            return Ok(product);
+            return Ok(new
+            {
+                product.Id,
+                product.Name,
+                product.Description,
+                product.Price,
+                product.StockQuantity,
+                ImageUrl = GetFullImageUrl(product.ImageUrl),
+                product.CategoryProductId,
+                product.CategoryProductName
+            });
         }
     }
 }
