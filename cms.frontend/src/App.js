@@ -5,6 +5,7 @@ import ProductList from './components/ProductList';
 import PostList from './components/PostList';
 import BlogCategoryList from './components/BlogCategoryList';
 import ProductDetailPage from './pages/ProductDetailPage';
+import BlogCategoryPage from './pages/BlogCategoryPage';
 import './App.css';
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
                         </div>
                     } />
                     <Route path="/product/:id" element={<ProductDetailPage />} />
+                    <Route path="/blog/category/:id" element={<BlogCategoryPage />} />
                 </Routes>
 
                 <footer className="pt-3 mt-5 text-muted border-top text-center small">
