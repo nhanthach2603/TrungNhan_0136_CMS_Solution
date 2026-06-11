@@ -1,106 +1,32 @@
-import React, { useState } from 'react';
-import CategoryProductList from './components/CategoryProductList';
-import ProductList from './components/ProductList';
-import ProductDetail from './components/ProductDetail';
-import PostList from './components/PostList';
-import BlogCategoryList from './components/BlogCategoryList';
-import LoginForm from './components/LoginForm';
-import RegisterForm from './components/RegisterForm';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import HomePage from './pages/HomePage';
+import ShopPage from './pages/ShopPage';
+import BlogPage from './pages/BlogPage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 import './App.css';
 
 function App() {
-    const [selectedCategoryId, setSelectedCategoryId] = useState(null);
-    const [selectedProductId, setSelectedProductId] = useState(null);
     return (
-        <div>
-            <nav className="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
-                <div className="container">
-                    <a className="navbar-brand font-weight-bold" href="#home">
-                        👗 FASHION BOUTIQUE
-                    </a>
-                    <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNav">
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-                    <div className="collapse navbar-collapse" id="mainNav">
-                        <ul className="navbar-nav mr-auto">
-                            <li className="nav-item"><a className="nav-link" href="#home"><i className="fa-solid fa-house mr-1"></i>Trang chủ</a></li>
-                            <li className="nav-item"><a className="nav-link" href="#shop"><i className="fa-solid fa-bag-shopping mr-1"></i>Cửa hàng</a></li>
-                            <li className="nav-item"><a className="nav-link" href="#blog"><i className="fa-solid fa-newspaper mr-1"></i>Tin tức</a></li>
-                        </ul>
-                        <ul className="navbar-nav">
-                            <li className="nav-item"><a className="nav-link" href="#login"><i className="fa-solid fa-right-to-bracket mr-1"></i>Đăng nhập</a></li>
-                            <li className="nav-item"><a className="nav-link" href="#register"><i className="fa-solid fa-user-plus mr-1"></i>Đăng ký</a></li>
-                        </ul>
-                    </div>
+        <Router>
+            <div className="App">
+                <Navbar />
+                <div className="container mt-4">
+                    <Routes>
+                        <Route path="/" element={<HomePage />} />
+                        <Route path="/shop" element={<ShopPage />} />
+                        <Route path="/blog" element={<BlogPage />} />
+                        <Route path="/login" element={<LoginPage />} />
+                        <Route path="/register" element={<RegisterPage />} />
+                    </Routes>
+                    <footer className="text-center text-muted py-4 border-top mt-5">
+                        <small>© 2026 Fashion Boutique — ASP.NET Core + ReactJS</small>
+                    </footer>
                 </div>
-            </nav>
-
-            <div className="container mt-4">
-                <section id="home" className="mb-5">
-                    <div className="p-5 bg-light rounded shadow-sm text-center">
-                        <h1 className="display-4 font-weight-bold">Chào mừng đến Fashion Boutique</h1>
-                        <p className="lead text-secondary mt-3">Thời trang công sở & dạ hội — Cập nhật xu hướng mới nhất.</p>
-                        <a href="#shop" className="btn btn-primary btn-lg mt-2"><i className="fa-solid fa-bag-shopping mr-2"></i>Mua sắm ngay</a>
-                    </div>
-                </section>
-
-                <section id="shop" className="mb-5">
-                    <div className="row">
-                        <div className="col-md-3 mb-4">
-                            <CategoryProductList
-                                onSelectCategory={setSelectedCategoryId}
-                                selectedId={selectedCategoryId}
-                            />
-                        </div>
-                        <div className="col-md-9">
-                            <h4 className="mb-4 text-uppercase text-secondary font-weight-bold">Bộ sưu tập mới nhất</h4>
-                            {selectedProductId ? (
-                                <ProductDetail
-                                    productId={selectedProductId}
-                                    onBack={() => setSelectedProductId(null)}
-                                />
-                            ) : (
-                                <ProductList
-                                    categoryId={selectedCategoryId}
-                                    onViewProduct={setSelectedProductId}
-                                />
-                            )}
-                        </div>
-                    </div>
-                </section>
-
-                <section id="blog" className="mb-5">
-                    <div className="row">
-                        <div className="col-md-4">
-                            <BlogCategoryList />
-                        </div>
-                        <div className="col-md-8">
-                            <PostList />
-                        </div>
-                    </div>
-                </section>
-
-                <section id="login" className="mb-5">
-                    <div className="row">
-                        <div className="col-md-6 offset-md-3">
-                            <LoginForm />
-                        </div>
-                    </div>
-                </section>
-
-                <section id="register" className="mb-5">
-                    <div className="row">
-                        <div className="col-md-8 offset-md-2">
-                            <RegisterForm />
-                        </div>
-                    </div>
-                </section>
-
-                <footer className="text-center text-muted py-4 border-top mt-5">
-                    <small>© 2026 Fashion Boutique — ASP.NET Core + ReactJS</small>
-                </footer>
             </div>
-        </div>
+        </Router>
     );
 }
 
