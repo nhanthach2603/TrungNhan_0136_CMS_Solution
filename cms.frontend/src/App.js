@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import CategoryProductList from './components/CategoryProductList';
 import ProductList from './components/ProductList';
+import ProductDetail from './components/ProductDetail';
 import PostList from './components/PostList';
 import BlogCategoryList from './components/BlogCategoryList';
 import LoginForm from './components/LoginForm';
@@ -9,6 +10,7 @@ import './App.css';
 
 function App() {
     const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+    const [selectedProductId, setSelectedProductId] = useState(null);
     return (
         <div>
             <nav className="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
@@ -52,7 +54,17 @@ function App() {
                         </div>
                         <div className="col-md-9">
                             <h4 className="mb-4 text-uppercase text-secondary font-weight-bold">Bộ sưu tập mới nhất</h4>
-                            <ProductList categoryId={selectedCategoryId} />
+                            {selectedProductId ? (
+                                <ProductDetail
+                                    productId={selectedProductId}
+                                    onBack={() => setSelectedProductId(null)}
+                                />
+                            ) : (
+                                <ProductList
+                                    categoryId={selectedCategoryId}
+                                    onViewProduct={setSelectedProductId}
+                                />
+                            )}
                         </div>
                     </div>
                 </section>

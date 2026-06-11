@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import productService from '../services/productService';
 
-const ProductList = ({ categoryId }) => {
+const ProductList = ({ categoryId, onViewProduct }) => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [filterName, setFilterName] = useState('Tất cả sản phẩm');
@@ -52,8 +52,9 @@ const ProductList = ({ categoryId }) => {
                                     <span className="badge badge-secondary">{item.categoryProductName}</span>
                                 </div>
                                 <div className="card-footer bg-transparent border-top-0">
-                                    <button className="btn btn-outline-primary btn-block btn-sm">
-                                        <i className="fa-solid fa-cart-plus mr-1"></i> Xem chi tiết
+                                    <button className="btn btn-outline-primary btn-block btn-sm"
+                                            onClick={() => onViewProduct && onViewProduct(item.id)}>
+                                        <i className="fa-solid fa-eye mr-1"></i> Xem chi tiết
                                     </button>
                                 </div>
                             </div>

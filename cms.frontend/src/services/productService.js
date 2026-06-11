@@ -8,6 +8,10 @@ const productService = {
     getProductsByCategory: (categoryProductId) => {
         const url = `/Products/category/${categoryProductId}`;
         return axiosClient.get(url);
+    },
+    getProductById: (id) => {
+        const url = `/Products/${id}`;
+        return axiosClient.get(url);
     }
 };
 
