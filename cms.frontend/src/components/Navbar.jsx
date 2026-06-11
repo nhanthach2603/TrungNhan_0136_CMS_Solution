@@ -34,7 +34,7 @@ const Navbar = () => {
                             </Link>
                         </li>
                         <li className="nav-item">
-                            <Link className={`nav-link ${location.pathname === '/blog' ? 'active' : ''}`} to="/blog">
+                            <Link className={`nav-link ${location.pathname.startsWith('/blog') ? 'active' : ''}`} to="/blog">
                                 <i className="fa-solid fa-newspaper mr-1"></i>Tin tức
                             </Link>
                         </li>

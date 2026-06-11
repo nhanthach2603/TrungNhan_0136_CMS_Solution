@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
 import ShopPage from './pages/ShopPage';
 import BlogPage from './pages/BlogPage';
+import BlogCategoryPage from './pages/BlogCategoryPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import './App.css';
@@ -18,6 +19,7 @@ function App() {
                         <Route path="/" element={<HomePage />} />
                         <Route path="/shop" element={<ShopPage />} />
                         <Route path="/blog" element={<BlogPage />} />
+                        <Route path="/blog/category/:id" element={<BlogCategoryPage />} />
                         <Route path="/login" element={<LoginPage />} />
                         <Route path="/register" element={<RegisterPage />} />
                     </Routes>
