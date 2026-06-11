@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import productService from '../services/productService';
 
-const ProductList = ({ categoryId, onViewProduct }) => {
+const ProductList = ({ categoryId }) => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [filterName, setFilterName] = useState('Tất cả sản phẩm');
@@ -52,10 +53,9 @@ const ProductList = ({ categoryId, onViewProduct }) => {
                                     <span className="badge badge-secondary">{item.categoryProductName}</span>
                                 </div>
                                 <div className="card-footer bg-transparent border-top-0">
-                                    <button className="btn btn-outline-primary btn-block btn-sm"
-                                            onClick={() => onViewProduct && onViewProduct(item.id)}>
+                                    <Link to={`/product/${item.id}`} className="btn btn-outline-primary btn-block btn-sm">
                                         <i className="fa-solid fa-eye mr-1"></i> Xem chi tiết
-                                    </button>
+                                    </Link>
                                 </div>
                             </div>
                         </div>
