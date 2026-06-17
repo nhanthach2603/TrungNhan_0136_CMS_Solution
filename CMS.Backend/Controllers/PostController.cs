@@ -1,70 +1,136 @@
-﻿/*
+/*
     Ho ten sinh vien: Thach Tran Trung Nhan
     Ma sv: 2123110136
     Ngay tao: 15 / 05 / 2026
  */
 
-
 using Microsoft.AspNetCore.Mvc;
-using CMS.Data.Entities; // Quan trọng: Phải có dòng này để dùng lớp Post
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
+using CMS.Data;
+using CMS.Data.Entities;
 
 namespace CMS.Backend.Controllers
 {
+    [Authorize]
     public class PostController : Controller
     {
-        // Hàm Index: Hiển thị danh sách bài viết mẫu
+        private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _env;
+
+        public PostController(ApplicationDbContext context, IWebHostEnvironment env)
+        {
+            _context = context;
+            _env = env;
+        }
+
+        // Hiển thị danh sách bài viết
         public IActionResult Index()
         {
-            // 1. Tạo dữ liệu giả (Mock Data) cho Bài viết
-            var posts = new List<Post>
-            {
-                new Post
-                {
-                    Id = 1,
-                    Title = "Lộ trình học ASP.NET Core cho người mới",
-                    Content = "Nội dung bài viết về lộ trình học .NET...",
-                    ImageUrl = "https://via.placeholder.com/150",
-                    CreatedDate = DateTime.Now
-                },
-                new Post
-                {
-                    Id = 2,
-                    Title = "ReactJS và WebAPI: Xu hướng Fullstack 2026",
-                    Content = "Nội dung bài viết về sự kết hợp React và API...",
-                    ImageUrl = "https://via.placeholder.com/150",
-                    CreatedDate = DateTime.Now.AddDays(-1)
-                },
-                new Post
-                {
-                    Id = 3,
-                    Title = "Hướng dẫn cài đặt môi trường Visual Studio",
-                    Content = "Các bước cài đặt công cụ cần thiết cho lập trình viên...",
-                    ImageUrl = "https://via.placeholder.com/150",
-                    CreatedDate = DateTime.Now.AddDays(-2)
-                }
-            };
-
-            // 2. Gửi danh sách dữ liệu sang View
+            var posts = _context.Posts.ToList();
             return View(posts);
         }
 
-        // Hàm Details: Hiển thị chi tiết một bài viết (Bổ sung cho sinh viên khá giỏi
+        // Chi tiết bài viết
         public IActionResult Details(int id)
         {
-            // Giả lập tìm bài viết trong Database bằng Id
-            // Trong thực tế tuần sau sẽ là: _context.Posts.Find(id);
-            var post = new Post
-            {
-                Id = id,
-                Title = "Nội dung chi tiết bài viết số " + id,
-                Content = "Đây là nội dung đầy đủ của bài viết mà bạn vừa click vào. Ở đây sinh viên có thể viết dài hơn để thấy sự khác biệt với trang danh sách.",
-                ImageUrl = "https://via.placeholder.com/600x300", // Ảnh to hơn
-                CreatedDate = DateTime.Now
-            };
+            var post = _context.Posts.Find(id);
+            if (post == null) return NotFound();
+            return View(post);
+        }
 
+        // GET: Thêm bài viết mới
+        [HttpGet]
+        public IActionResult Create()
+        {
+            var categories = _context.Categories.ToList();
+            ViewBag.CategoryList = new SelectList(categories, "Id", "Name");
+            return View();
+        }
+
+        // POST: Thêm bài viết mới
+        [HttpPost]
+        public IActionResult Create(Post model, IFormFile uploadImage)
+        {
+            // Xử lý upload ảnh
+            if (uploadImage != null && uploadImage.Length > 0)
+            {
+                var fileName = Guid.NewGuid() + Path.GetExtension(uploadImage.FileName);
+                var filePath = Path.Combine(_env.WebRootPath, "uploads", fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    uploadImage.CopyTo(stream);
+                }
+
+                model.ImageUrl = "/uploads/" + fileName;
+            }
+
+            model.CreatedDate = DateTime.Now;
+            _context.Posts.Add(model);
+            _context.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
+        // GET: Sửa bài viết
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var post = _context.Posts.AsNoTracking().FirstOrDefault(x => x.Id == id);
             if (post == null) return NotFound();
 
+            var categories = _context.Categories.ToList();
+            ViewBag.CategoryList = new SelectList(categories, "Id", "Name");
+
             return View(post);
+        }
+
+        // POST: Sửa bài viết
+        [HttpPost]
+        public IActionResult Edit(Post model, IFormFile uploadImage)
+        {
+            // Xử lý upload ảnh mới
+            if (uploadImage != null && uploadImage.Length > 0)
+            {
+                var fileName = Guid.NewGuid() + Path.GetExtension(uploadImage.FileName);
+                var filePath = Path.Combine(_env.WebRootPath, "uploads", fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    uploadImage.CopyTo(stream);
+                }
+
+                model.ImageUrl = "/uploads/" + fileName;
+            }
+            else
+            {
+                // Giữ nguyên ảnh cũ nếu không chọn ảnh mới
+                var oldPost = _context.Posts.AsNoTracking().FirstOrDefault(x => x.Id == model.Id);
+                if (oldPost != null)
+                {
+                    model.ImageUrl = oldPost.ImageUrl;
+                }
+            }
+
+            _context.Posts.Update(model);
+            _context.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
+        // Xóa bài viết
+        public IActionResult Delete(int id)
+        {
+            var post = _context.Posts.Find(id);
+            if (post != null)
+            {
+                _context.Posts.Remove(post);
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("Index");
         }
     }
 }
