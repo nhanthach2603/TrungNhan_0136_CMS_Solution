@@ -147,7 +147,7 @@ namespace CMS.Backend.Controllers
 
             sb.Append("<div class='footer'>");
             sb.Append("<p>Ngay xuat: " + DateTime.Now.ToString("dd/MM/yyyy HH:mm") + "</p>");
-            sb.Append("<p>ThaiCMS.Fashion - He thong quan ly don hang</p>");
+            sb.Append("<p>camera24h.shop - He thong quan ly don hang</p>");
             sb.Append("</div>");
             sb.Append("</body></html>");
 

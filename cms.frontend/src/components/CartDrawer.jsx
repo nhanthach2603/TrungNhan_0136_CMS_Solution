@@ -303,7 +303,7 @@ const CartDrawer = () => {
                         </div>
                         <h4>Đặt Hàng Thành Công!</h4>
                         <p className="success-desc">
-                            Cảm ơn quý khách đã tin tưởng và mua sắm tại <strong>ThaiCMS.Fashion</strong>.
+                            Cảm ơn quý khách đã tin tưởng và mua sắm tại <strong>camera24h.shop</strong>.
                         </p>
                         <div className="order-details-box">
                             <div className="detail-item">
