@@ -10,6 +10,7 @@ import ProductDetailPage from './pages/ProductDetailPage';
 import PostDetailPage from './pages/PostDetailPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import OrderHistoryPage from './pages/OrderHistoryPage';
 import './App.css';
 
 function App() {
@@ -24,8 +25,9 @@ function App() {
                                 <Route path="/" element={<HomePage />} />
                                 <Route path="/product/:id" element={<ProductDetailPage />} />
                                 <Route path="/post/:id" element={<PostDetailPage />} />
-                                <Route path="/login" element={<LoginPage />} />
-                                <Route path="/register" element={<RegisterPage />} />
+                            <Route path="/login" element={<LoginPage />} />
+                            <Route path="/register" element={<RegisterPage />} />
+                            <Route path="/account/orders" element={<OrderHistoryPage />} />
                             </Routes>
                         </div>
                         <Footer />

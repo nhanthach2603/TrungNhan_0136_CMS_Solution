@@ -4,9 +4,14 @@
 }
 @model IEnumerable<CMS.Data.Entities.Customer>
 
-<div class="page-title-block">
-    <h4>Quản lý khách hàng</h4>
-    <p>Xem hồ sơ, thông tin liên lạc và lịch sử đơn hàng của các khách hàng đăng ký</p>
+<div class="page-title-block d-flex justify-content-between align-items-center">
+    <div>
+        <h4>Quản lý khách hàng</h4>
+        <p>Xem hồ sơ, thông tin liên lạc và lịch sử đơn hàng của các khách hàng đăng ký</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Thêm khách hàng
+    </a>
 </div>
 
 <div class="card">
@@ -20,8 +25,8 @@
                         <th>EMAIL LIÊN HỆ</th>
                         <th style="width:130px;">SỐ ĐIỆN THOẠI</th>
                         <th>ĐỊA CHỈ ĐĂNG KÝ</th>
-                        <th class="text-center" style="width:140px;">ĐƠN HÀNG</th>
-                        <th class="pe-4" style="width:140px;">THAO TÁC</th>
+                        <th class="text-center" style="width:100px;">ĐƠN HÀNG</th>
+                        <th class="pe-4" style="width:200px;">THAO TÁC</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -40,17 +45,11 @@
                         {
                             <tr>
                                 <td class="ps-4 text-secondary fw-bold">#@item.Id</td>
+                                <td><span class="fw-semibold">@item.FullName</span></td>
+                                <td><a href="mailto:@item.Email" class="text-decoration-none">@item.Email</a></td>
+                                <td><span>@(string.IsNullOrEmpty(item.Phone) ? "—" : item.Phone)</span></td>
                                 <td>
-                                    <span class="fw-semibold">@item.FullName</span>
-                                </td>
-                                <td>
-                                    <a href="mailto:@item.Email" class="text-decoration-none">@item.Email</a>
-                                </td>
-                                <td>
-                                    <span>@(string.IsNullOrEmpty(item.Phone) ? "—" : item.Phone)</span>
-                                </td>
-                                <td>
-                                    <div class="text-truncate text-muted" style="max-width:220px;" title="@item.Address">
+                                    <div class="text-truncate text-muted" style="max-width:180px;" title="@item.Address">
                                         @(string.IsNullOrEmpty(item.Address) ? "—" : item.Address)
                                     </div>
                                 </td>
@@ -60,10 +59,19 @@
                                     </span>
                                 </td>
                                 <td class="pe-4">
-                                    <div class="action-buttons">
-                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info">
-                                            <i class="bi bi-clock-history"></i> Lịch sử
+                                    <div class="action-buttons d-flex gap-1">
+                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info" title="Xem chi tiết">
+                                            <i class="bi bi-eye"></i>
                                         </a>
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning" title="Sửa">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline"
+                                              onsubmit="return confirm('Xóa khách hàng @item.FullName? Đơn hàng liên kết cũng sẽ bị xóa!')">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Xóa">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>

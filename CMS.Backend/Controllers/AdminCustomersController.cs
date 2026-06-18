@@ -1,8 +1,8 @@
 using CMS.Data;
+using CMS.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace CMS.Backend.Controllers
 {
@@ -16,7 +16,6 @@ namespace CMS.Backend.Controllers
             _context = context;
         }
 
-        // GET: AdminCustomers
         public IActionResult Index(int page = 1)
         {
             const int pageSize = 10;
@@ -34,7 +33,6 @@ namespace CMS.Backend.Controllers
             return View(customers);
         }
 
-        // GET: AdminCustomers/Details/5
         public IActionResult Details(int id)
         {
             var customer = _context.Customers
@@ -42,12 +40,85 @@ namespace CMS.Backend.Controllers
                     .ThenInclude(o => o.OrderDetails!)
                 .FirstOrDefault(c => c.Id == id);
 
-            if (customer == null)
-            {
-                return NotFound();
-            }
-
+            if (customer == null) return NotFound();
             return View(customer);
+        }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(Customer model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (_context.Customers.Any(c => c.Email.ToLower() == model.Email.ToLower()))
+                {
+                    ModelState.AddModelError("Email", "Email đã tồn tại!");
+                    return View(model);
+                }
+                _context.Customers.Add(model);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var item = _context.Customers.Find(id);
+            if (item == null) return NotFound();
+            return View(item);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Customer model)
+        {
+            if (ModelState.IsValid)
+            {
+                var existing = _context.Customers.AsNoTracking().FirstOrDefault(c => c.Id == model.Id);
+                if (existing != null && existing.Email != model.Email)
+                {
+                    if (_context.Customers.Any(c => c.Email.ToLower() == model.Email.ToLower()))
+                    {
+                        ModelState.AddModelError("Email", "Email đã tồn tại!");
+                        return View(model);
+                    }
+                }
+                _context.Customers.Update(model);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            var item = _context.Customers
+                .Include(c => c.Orders!)
+                    .ThenInclude(o => o.OrderDetails)
+                .FirstOrDefault(c => c.Id == id);
+
+            if (item != null)
+            {
+                if (item.Orders != null)
+                {
+                    foreach (var order in item.Orders)
+                    {
+                        if (order.OrderDetails != null)
+                            _context.OrderDetails.RemoveRange(order.OrderDetails);
+                    }
+                    _context.Orders.RemoveRange(item.Orders);
+                }
+                _context.Customers.Remove(item);
+                _context.SaveChanges();
+            }
+            return RedirectToAction("Index");
         }
     }
 }

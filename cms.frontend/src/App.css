@@ -719,6 +719,13 @@ ul { list-style: none; }
 .top-bar-logout:hover {
     color: #ff4444 !important;
 }
+.top-bar-orders {
+    color: #ccc !important;
+    margin-right: 12px;
+}
+.top-bar-orders:hover {
+    color: var(--mint) !important;
+}
 
 /* ===== CART DRAWER STYLES ===== */
 .cart-drawer-backdrop {
@@ -1521,8 +1528,98 @@ ul { list-style: none; }
     background: var(--primary);
     color: var(--mint);
     border-color: var(--primary);
-    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15);
 }
+
+/* ===== ORDER HISTORY ===== */
+.order-history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.order-card {
+    background: var(--bg-white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+.order-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 20px;
+    background: var(--bg-page);
+    border-bottom: 1px solid var(--border);
+}
+.order-id {
+    font-weight: 700;
+    color: var(--primary);
+    margin-right: 14px;
+    font-size: 0.95rem;
+}
+.order-date {
+    color: var(--text-light);
+    font-size: 0.85rem;
+}
+.order-status {
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+.order-card-items {
+    padding: 14px 20px;
+}
+.order-item-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 0;
+    border-bottom: 1px dashed var(--border);
+}
+.order-item-row:last-child {
+    border-bottom: none;
+}
+.order-item-name {
+    flex: 1;
+    font-size: 0.9rem;
+    color: var(--text-dark);
+}
+.order-item-qty {
+    color: var(--text-light);
+    font-size: 0.85rem;
+    min-width: 30px;
+}
+.order-item-price {
+    font-weight: 600;
+    color: var(--red);
+    font-size: 0.9rem;
+    min-width: 100px;
+    text-align: right;
+}
+.order-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background: var(--bg-page);
+    border-top: 1px solid var(--border);
+}
+.order-total {
+    font-size: 0.95rem;
+    color: var(--text-dark);
+}
+.order-total strong {
+    color: var(--red);
+    font-size: 1.05rem;
+}
+.order-notes {
+    font-size: 0.82rem;
+    max-width: 300px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
 
 .quick-cat-icon-wrapper.active {
     background: var(--primary);

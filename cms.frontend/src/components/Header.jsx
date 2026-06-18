@@ -53,8 +53,11 @@ const Header = () => {
                         {isLoggedIn ? (
                             <>
                                 <span className="top-bar-user">
-                                    <i className="fa-solid fa-circle-user mr-1"></i> {fullName}
+                                    <i className="fa-solid fa-circle-user"></i> {fullName}
                                 </span>
+                                <Link to="/account/orders" className="top-bar-orders">
+                                    <i className="fa-solid fa-receipt"></i> Đơn hàng
+                                </Link>
                                 <a href="#" onClick={handleLogout} className="top-bar-logout">
                                     <i className="fa-solid fa-right-from-bracket"></i> Đăng xuất
                                 </a>

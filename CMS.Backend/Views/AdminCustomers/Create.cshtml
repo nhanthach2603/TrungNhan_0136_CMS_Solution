@@ -1,0 +1,47 @@
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Thêm khách hàng";
+}
+@model CMS.Data.Entities.Customer
+
+<div class="page-title-block">
+    <h4><i class="bi bi-person-plus"></i> Thêm khách hàng mới</h4>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form asp-action="Create">
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Họ và tên <span class="text-danger">*</span></label>
+                    <input asp-for="FullName" class="form-control" placeholder="Nguyễn Văn A" required />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Email <span class="text-danger">*</span></label>
+                    <input asp-for="Email" type="email" class="form-control" placeholder="email@example.com" required />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Mật khẩu <span class="text-danger">*</span></label>
+                    <input asp-for="Password" type="password" class="form-control" placeholder="Ít nhất 6 ký tự" required />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Số điện thoại</label>
+                    <input asp-for="Phone" class="form-control" placeholder="0901234567" />
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Địa chỉ</label>
+                <input asp-for="Address" class="form-control" placeholder="TP. Hồ Chí Minh" />
+            </div>
+
+            <button type="submit" class="btn btn-primary"><i class="bi bi-check-circle"></i> Lưu</button>
+            <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+        </form>
+    </div>
+</div>
