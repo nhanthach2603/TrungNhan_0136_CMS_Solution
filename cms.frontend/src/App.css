@@ -1641,13 +1641,14 @@ ul { list-style: none; }
     gap: 28px;
     margin-top: 30px;
 }
-.homepage-main {
-    flex: 1;
-    min-width: 0;
-}
 .homepage-sidebar {
     width: 260px;
     flex-shrink: 0;
+    order: -1;
+}
+.homepage-main {
+    flex: 1;
+    min-width: 0;
 }
 .homepage-sidebar .sidebar-widget {
     background: var(--bg-white);

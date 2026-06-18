@@ -358,14 +358,6 @@ const HomePage = () => {
                                 </ul>
                             </div>
 
-                            <div className="sidebar-widget mt-4">
-                                <h4 className="widget-title">LIÊN HỆ</h4>
-                                <div className="sidebar-contact-info">
-                                    <p><i className="fa-solid fa-phone mr-2"></i> 1900 6789</p>
-                                    <p><i className="fa-solid fa-envelope mr-2"></i> support@thaicms.vn</p>
-                                    <p><i className="fa-solid fa-clock mr-2"></i> T2-T7: 8:00 - 21:00</p>
-                                </div>
-                            </div>
                         </aside>
                     </div>
                 </>
