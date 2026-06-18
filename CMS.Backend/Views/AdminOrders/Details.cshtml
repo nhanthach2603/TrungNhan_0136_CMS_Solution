@@ -1,0 +1,130 @@
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Chi tiết đơn hàng";
+}
+@model CMS.Data.Entities.Order
+
+<div class="mb-4">
+    <a asp-action="Index" class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-1 mb-2" style="font-size: 0.8rem; padding: 4px 12px;">
+        <i class="bi bi-arrow-left"></i> Quay lại danh sách
+    </a>
+    <h4 class="fw-bold text-dark mb-1">Chi tiết đơn đặt hàng</h4>
+    <p class="text-muted small mb-0">Quản lý hóa đơn và xử lý trạng thái giao nhận đơn hàng</p>
+</div>
+
+<div class="row g-4">
+    <!-- Left: Order Details & Products -->
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-transparent border-0 pt-4 px-4 pb-2">
+                <h5 class="fw-bold text-dark mb-0"><i class="bi bi-receipt text-warning me-2"></i> Hóa đơn đơn hàng #@Model.Id</h5>
+                <p class="text-muted small mt-1 mb-0">Ngày đặt: <strong>@Model.OrderDate.ToString("dd/MM/yyyy HH:mm:ss")</strong></p>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0 mt-3">
+                        <thead>
+                            <tr>
+                                <th class="ps-4" style="width: 80px; font-size: 0.75rem; letter-spacing: 0.5px;">HÌNH ẢNH</th>
+                                <th style="font-size: 0.75rem; letter-spacing: 0.5px;">TÊN THIẾT BỊ</th>
+                                <th class="text-end" style="width: 140px; font-size: 0.75rem; letter-spacing: 0.5px;">ĐƠN GIÁ</th>
+                                <th class="text-center" style="width: 100px; font-size: 0.75rem; letter-spacing: 0.5px;">SỐ LƯỢNG</th>
+                                <th class="text-end pe-4" style="width: 160px; font-size: 0.75rem; letter-spacing: 0.5px;">THÀNH TIỀN</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var detail in Model.OrderDetails ?? Enumerable.Empty<CMS.Data.Entities.OrderDetail>())
+                            {
+                                var itemTotal = detail.UnitPrice * detail.Quantity;
+                                <tr>
+                                    <td class="ps-4">
+                                        @if (!string.IsNullOrEmpty(detail.Product?.ImageUrl))
+                                        {
+                                            <img src="@detail.Product.ImageUrl" style="width: 48px; height: 48px; object-fit: cover; border-radius: 8px; border: 1px solid var(--slate-border);" />
+                                        }
+                                        else
+                                        {
+                                            <div style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; background: #f1f5f9; border-radius: 8px; border: 1px solid var(--slate-border);">
+                                                <i class="bi bi-camera text-muted"></i>
+                                            </div>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="fw-bold text-dark">@detail.Product?.Name</div>
+                                        <small class="text-muted" style="font-size: 0.75rem;">Danh mục: @detail.Product?.CategoryProduct?.Name</small>
+                                    </td>
+                                    <td class="text-end">@detail.UnitPrice.ToString("N0") đ</td>
+                                    <td class="text-center fw-semibold">@detail.Quantity</td>
+                                    <td class="text-end pe-4 text-danger fw-bold">@itemTotal.ToString("N0") đ</td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr class="bg-light">
+                                <td colspan="4" class="text-end fw-bold py-3 ps-4" style="font-size: 0.9rem;">Tổng giá trị đơn hàng:</td>
+                                <td class="text-end pe-4 text-danger fw-bold fs-5 py-3">
+                                    @{
+                                        var grandTotal = Model.OrderDetails?.Sum(d => d.UnitPrice * d.Quantity) ?? 0;
+                                    }
+                                    @grandTotal.ToString("N0") đ
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right: Customer Info & Status Action -->
+    <div class="col-lg-4">
+        <!-- Customer & Shipping Card -->
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-transparent border-0 pt-4 px-4 pb-0">
+                <h5 class="fw-bold text-dark mb-0"><i class="bi bi-person-circle text-primary me-2"></i> Khách hàng & Giao hàng</h5>
+            </div>
+            <div class="card-body px-4 pb-4">
+                <div class="mb-3">
+                    <small class="text-muted d-block" style="font-size: 0.75rem; font-weight: 600;">HỌ TÊN KHÁCH HÀNG</small>
+                    <strong class="text-dark fs-6">@Model.Customer?.FullName</strong>
+                </div>
+                <div class="mb-3">
+                    <small class="text-muted d-block" style="font-size: 0.75rem; font-weight: 600;">EMAIL LIÊN HỆ</small>
+                    <a href="mailto:@Model.Customer?.Email" class="text-decoration-none fw-semibold">@Model.Customer?.Email</a>
+                </div>
+                <hr class="my-3" style="border-color: var(--slate-border);" />
+                <div class="mb-2">
+                    <small class="text-muted d-block mb-1" style="font-size: 0.75rem; font-weight: 600;"><i class="bi bi-geo-alt-fill text-warning me-1"></i> THÔNG TIN NHẬN HÀNG & GHI CHÚ</small>
+                    <div class="p-3 rounded bg-light border-start border-3 border-warning text-dark small" style="line-height: 1.6; white-space: pre-wrap;">@Model.Notes</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Control Card -->
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-transparent border-0 pt-4 px-4 pb-0">
+                <h5 class="fw-bold text-dark mb-0"><i class="bi bi-info-circle text-info me-2"></i> Trạng thái đơn hàng</h5>
+            </div>
+            <div class="card-body px-4 pb-4">
+                <div class="mb-4 text-center">
+                    <small class="text-muted d-block mb-2" style="font-size: 0.75rem; font-weight: 600;">TRẠNG THÁI HIỆN TẠI</small>
+                    <div>
+                        @await Html.PartialAsync("_OrderStatusBadge", (int)Model.Status)
+                    </div>
+                </div>
+
+                <form asp-action="UpdateStatus" method="post">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <label class="form-label fw-bold text-secondary" style="font-size: 0.85rem;">Thay đổi trạng thái:</label>
+                    <select name="status" class="form-select mb-3" onchange="this.form.submit()">
+                        <option value="0" selected="@(Model.Status == 0)">Chờ duyệt</option>
+                        <option value="1" selected="@(Model.Status == 1)">Đang giao hàng</option>
+                        <option value="2" selected="@(Model.Status == 2)">Hoàn thành</option>
+                        <option value="3" selected="@(Model.Status == 3)">Hủy đơn</option>
+                    </select>
+                    <span class="text-muted small d-block" style="font-size: 0.72rem; line-height: 1.4;">Lưu ý: Thay đổi lựa chọn sẽ tự động cập nhật cơ sở dữ liệu và tải lại trang.</span>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

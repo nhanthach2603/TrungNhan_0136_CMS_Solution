@@ -21,9 +21,18 @@ namespace CMS.Backend.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int page = 1)
         {
-            var data = _context.CategoriesProducts.ToList();
+            const int pageSize = 10;
+            var query = _context.CategoriesProducts.OrderBy(c => c.Id);
+            int total = query.Count();
+            var data = query.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages  = (int)Math.Ceiling(total / (double)pageSize);
+            ViewBag.TotalCount  = total;
+            ViewBag.PageSize    = pageSize;
+            ViewBag.PagingController = "AdminCategoriesProducts";
+            ViewBag.PagingAction = "Index";
             return View(data);
         }
 

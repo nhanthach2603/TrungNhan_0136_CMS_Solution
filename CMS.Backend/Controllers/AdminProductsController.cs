@@ -25,11 +25,18 @@ namespace CMS.Backend.Controllers
             _env = env;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int page = 1)
         {
-            var products = _context.Products
-                .Include(p => p.CategoryProduct)
-                .ToList();
+            const int pageSize = 10;
+            var query = _context.Products.Include(p => p.CategoryProduct).OrderBy(p => p.Id);
+            int total = query.Count();
+            var products = query.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages  = (int)Math.Ceiling(total / (double)pageSize);
+            ViewBag.TotalCount  = total;
+            ViewBag.PageSize    = pageSize;
+            ViewBag.PagingController = "AdminProducts";
+            ViewBag.PagingAction = "Index";
             return View(products);
         }
 
@@ -41,19 +48,37 @@ namespace CMS.Backend.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Product model, IFormFile? uploadImage)
+        public IActionResult Create(Product model, List<IFormFile>? uploadImages)
         {
             if (ModelState.IsValid)
             {
-                if (uploadImage != null && uploadImage.Length > 0)
+                var imageUrls = new List<string>();
+
+                if (uploadImages != null && uploadImages.Any())
                 {
-                    var fileName = Guid.NewGuid() + Path.GetExtension(uploadImage.FileName);
-                    var filePath = Path.Combine(_env.WebRootPath, "uploads", fileName);
-                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    var uploadsDir = Path.Combine(_env.WebRootPath, "uploads");
+                    Directory.CreateDirectory(uploadsDir);
+
+                    foreach (var file in uploadImages)
                     {
-                        uploadImage.CopyTo(stream);
+                        if (file.Length > 0)
+                        {
+                            var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+                            var filePath = Path.Combine(uploadsDir, fileName);
+                            using (var stream = new FileStream(filePath, FileMode.Create))
+                            {
+                                file.CopyTo(stream);
+                            }
+                            imageUrls.Add("/uploads/" + fileName);
+                        }
                     }
-                    model.ImageUrl = "/uploads/" + fileName;
+                }
+
+                // Store first image as primary ImageUrl, rest as JSON in AdditionalImages (if exists)
+                // or store all as comma-separated in ImageUrl
+                if (imageUrls.Any())
+                {
+                    model.ImageUrl = string.Join(",", imageUrls);
                 }
 
                 _context.Products.Add(model);
@@ -74,25 +99,42 @@ namespace CMS.Backend.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(Product model, IFormFile? uploadImage)
+        public IActionResult Edit(Product model, List<IFormFile>? uploadImages, string? removeImageUrl)
         {
             if (ModelState.IsValid)
             {
-                if (uploadImage != null && uploadImage.Length > 0)
+                var old = _context.Products.AsNoTracking().FirstOrDefault(x => x.Id == model.Id);
+                var existingImages = old?.ImageUrl?.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList()
+                                    ?? new List<string>();
+
+                // Remove an image if requested
+                if (!string.IsNullOrEmpty(removeImageUrl))
                 {
-                    var fileName = Guid.NewGuid() + Path.GetExtension(uploadImage.FileName);
-                    var filePath = Path.Combine(_env.WebRootPath, "uploads", fileName);
-                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    existingImages.RemoveAll(u => u == removeImageUrl);
+                }
+
+                // Add new uploaded images
+                if (uploadImages != null && uploadImages.Any())
+                {
+                    var uploadsDir = Path.Combine(_env.WebRootPath, "uploads");
+                    Directory.CreateDirectory(uploadsDir);
+
+                    foreach (var file in uploadImages)
                     {
-                        uploadImage.CopyTo(stream);
+                        if (file.Length > 0)
+                        {
+                            var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+                            var filePath = Path.Combine(uploadsDir, fileName);
+                            using (var stream = new FileStream(filePath, FileMode.Create))
+                            {
+                                file.CopyTo(stream);
+                            }
+                            existingImages.Add("/uploads/" + fileName);
+                        }
                     }
-                    model.ImageUrl = "/uploads/" + fileName;
                 }
-                else
-                {
-                    var old = _context.Products.AsNoTracking().FirstOrDefault(x => x.Id == model.Id);
-                    if (old != null) model.ImageUrl = old.ImageUrl;
-                }
+
+                model.ImageUrl = string.Join(",", existingImages);
 
                 _context.Products.Update(model);
                 _context.SaveChanges();
@@ -100,6 +142,21 @@ namespace CMS.Backend.Controllers
             }
             ViewBag.CategoryList = new SelectList(_context.CategoriesProducts, "Id", "Name", model.CategoryProductId);
             return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult RemoveImage(int productId, string imageUrl)
+        {
+            var product = _context.Products.Find(productId);
+            if (product != null)
+            {
+                var images = product.ImageUrl?.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList()
+                             ?? new List<string>();
+                images.RemoveAll(u => u == imageUrl);
+                product.ImageUrl = string.Join(",", images);
+                _context.SaveChanges();
+            }
+            return RedirectToAction("Edit", new { id = productId });
         }
 
         public IActionResult Delete(int id)

@@ -1,41 +1,53 @@
 @{
     Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Sửa thành viên";
 }
 @model CMS.Data.Entities.User
 
-<div class="container mt-4">
-    <h2 class="text-warning">CHỈNH SỬA THÀNH VIÊN</h2>
-    <hr />
+<div class="mb-4">
+    <a asp-action="Index" class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-1 mb-2" style="font-size: 0.8rem; padding: 4px 12px;">
+        <i class="bi bi-arrow-left"></i> Quay lại danh sách
+    </a>
+    <h4 class="fw-bold text-dark mb-1">Cập nhật thông tin thành viên</h4>
+    <p class="text-muted small mb-0">Chỉnh sửa thông tin chi tiết và phân quyền tài khoản quản trị</p>
+</div>
 
-    <form asp-action="Edit" method="post">
-        <input type="hidden" asp-for="Id" />
+<div class="card shadow-sm border-0" style="max-width: 600px;">
+    <div class="card-body p-4">
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="Id" />
 
-        <div class="mb-3">
-            <label class="form-label fw-bold">Tên đăng nhập:</label>
-            <input asp-for="Username" class="form-control" readonly />
-        </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold text-secondary" style="font-size: 0.85rem;">Tên đăng nhập:</label>
+                <input asp-for="Username" class="form-control bg-light" readonly />
+            </div>
 
-        <div class="mb-3">
-            <label class="form-label fw-bold">Mật khẩu mới (để trống nếu không đổi):</label>
-            <input type="password" name="NewPassword" class="form-control" />
-        </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold text-secondary" style="font-size: 0.85rem;">Mật khẩu mới (bỏ trống nếu không đổi):</label>
+                <input type="password" name="NewPassword" class="form-control" placeholder="Nhập mật khẩu mới nếu muốn thay đổi..." />
+            </div>
 
-        <div class="mb-3">
-            <label class="form-label fw-bold">Họ và tên:</label>
-            <input asp-for="FullName" class="form-control" />
-        </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold text-secondary" style="font-size: 0.85rem;">Họ và tên:</label>
+                <input asp-for="FullName" class="form-control" placeholder="Nhập họ và tên..." required />
+            </div>
 
-        <div class="mb-3">
-            <label class="form-label fw-bold">Quyền hạn:</label>
-            <select asp-for="Role" class="form-select">
-                <option value="Admin">Admin</option>
-                <option value="Editor">Editor</option>
-            </select>
-        </div>
+            <div class="mb-4">
+                <label class="form-label fw-bold text-secondary" style="font-size: 0.85rem;">Quyền hạn:</label>
+                <select asp-for="Role" class="form-select">
+                    <option value="Admin">Admin (Quản trị viên)</option>
+                    <option value="Editor">Editor (Biên tập viên)</option>
+                </select>
+            </div>
 
-        <button type="submit" class="btn btn-warning">
-            <i class="bi bi-save"></i> Cập nhật
-        </button>
-        <a asp-action="Index" class="btn btn-secondary">Hủy bỏ</a>
-    </form>
+            <hr class="my-4" style="border-color: var(--slate-border);" />
+
+            <div class="d-flex justify-content-end gap-2">
+                <a asp-action="Index" class="btn btn-outline-secondary py-2 px-3">Hủy bỏ</a>
+                <button type="submit" class="btn btn-primary py-2 px-4 d-inline-flex align-items-center gap-1">
+                    <i class="bi bi-check-lg"></i> Cập nhật thông tin
+                </button>
+            </div>
+        </form>
+    </div>
 </div>

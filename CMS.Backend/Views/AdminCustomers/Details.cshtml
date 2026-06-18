@@ -1,0 +1,129 @@
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Chi tiết khách hàng";
+}
+@model CMS.Data.Entities.Customer
+
+<div class="mb-4">
+    <a asp-action="Index" class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-1 mb-2" style="font-size: 0.8rem; padding: 4px 12px;">
+        <i class="bi bi-arrow-left"></i> Quay lại danh sách
+    </a>
+    <h4 class="fw-bold text-dark mb-1">Lịch sử hoạt động khách hàng</h4>
+    <p class="text-muted small mb-0">Xem chi tiết thông tin hồ sơ và danh sách đơn hàng đã mua</p>
+</div>
+
+<div class="row g-4">
+    <!-- Customer Profile Card -->
+    <div class="col-lg-4">
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-transparent border-0 pt-4 px-4 pb-0">
+                <h5 class="fw-bold text-dark mb-0"><i class="bi bi-person-badge text-primary me-2"></i> Hồ sơ khách hàng</h5>
+            </div>
+            <div class="card-body px-4 pb-4">
+                <div class="text-center mb-4 pt-2">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-light text-secondary rounded-circle border" style="width: 80px; height: 80px; font-size: 2.5rem;">
+                        <i class="bi bi-person"></i>
+                    </div>
+                    <h5 class="mt-3 mb-1 fw-bold text-dark">@Model.FullName</h5>
+                    <span class="badge bg-primary-subtle text-primary border border-primary px-3 py-1.5 fw-bold" style="font-size: 0.72rem;">Thành viên đăng ký</span>
+                </div>
+
+                <div class="mb-3">
+                    <small class="text-muted d-block" style="font-size: 0.72rem; font-weight: 600;">MÃ TÀI KHOẢN</small>
+                    <strong class="text-dark">#@Model.Id</strong>
+                </div>
+                <div class="mb-3">
+                    <small class="text-muted d-block" style="font-size: 0.72rem; font-weight: 600;">ĐỊA CHỈ EMAIL</small>
+                    <a href="mailto:@Model.Email" class="text-decoration-none fw-semibold">@Model.Email</a>
+                </div>
+                <div class="mb-3">
+                    <small class="text-muted d-block" style="font-size: 0.72rem; font-weight: 600;">SỐ ĐIỆN THOẠI</small>
+                    <strong class="text-dark">@(string.IsNullOrEmpty(Model.Phone) ? "Chưa cập nhật" : Model.Phone)</strong>
+                </div>
+                <div class="mb-2">
+                    <small class="text-muted d-block" style="font-size: 0.72rem; font-weight: 600;">ĐỊA CHỈ ĐĂNG KÝ</small>
+                    <strong class="text-dark d-block" style="font-size: 0.9rem; line-height: 1.4;">@(string.IsNullOrEmpty(Model.Address) ? "Chưa cập nhật" : Model.Address)</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Orders History -->
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-transparent border-0 pt-4 px-4 pb-2">
+                <h5 class="fw-bold text-dark mb-0"><i class="bi bi-history text-warning me-2"></i> Lịch sử mua sắm</h5>
+                <p class="text-muted small mt-1 mb-0">Tổng cộng đơn hàng đã đặt: <strong>@(Model.Orders?.Count ?? 0) đơn</strong></p>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive mt-3">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th class="ps-4" style="font-size: 0.75rem; letter-spacing: 0.5px;">MÃ ĐƠN</th>
+                                <th style="font-size: 0.75rem; letter-spacing: 0.5px;">NGÀY ĐẶT</th>
+                                <th style="font-size: 0.75rem; letter-spacing: 0.5px;">TRỊ GIÁ ĐƠN</th>
+                                <th style="font-size: 0.75rem; letter-spacing: 0.5px;">TRẠNG THÁI</th>
+                                <th class="text-end pe-4" style="width: 120px; font-size: 0.75rem; letter-spacing: 0.5px;">CHI TIẾT</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Orders == null || !Model.Orders.Any())
+                            {
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted py-5">
+                                        <i class="bi bi-cart-x fs-2 d-block mb-2 text-muted" style="opacity: 0.5;"></i>
+                                        Khách hàng này chưa thực hiện đặt đơn hàng nào.
+                                    </td>
+                                </tr>
+                            }
+                            else
+                            {
+                                @foreach (var order in Model.Orders.OrderByDescending(o => o.OrderDate))
+                                {
+                                    var orderTotal = order.OrderDetails?.Sum(d => d.UnitPrice * d.Quantity) ?? 0;
+                                    <tr>
+                                        <td class="ps-4 text-secondary fw-bold">#@order.Id</td>
+                                        <td>@order.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
+                                        <td class="text-danger fw-bold">@orderTotal.ToString("N0") đ</td>
+                                        <td>
+                                            @if (order.Status == 0)
+                                            {
+                                                <span class="badge bg-warning-subtle text-warning border border-warning px-2.5 py-1.5 fw-bold" style="font-size: 0.72rem;">
+                                                    <i class="bi bi-clock-history"></i> Chờ duyệt
+                                                </span>
+                                            }
+                                            else if (order.Status == 1)
+                                            {
+                                                <span class="badge bg-primary-subtle text-primary border border-primary px-2.5 py-1.5 fw-bold" style="font-size: 0.72rem;">
+                                                    <i class="bi bi-truck"></i> Đang giao
+                                                </span>
+                                            }
+                                            else if (order.Status == 2)
+                                            {
+                                                <span class="badge bg-success-subtle text-success border border-success px-2.5 py-1.5 fw-bold" style="font-size: 0.72rem;">
+                                                    <i class="bi bi-check-circle-fill"></i> Hoàn thành
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-danger-subtle text-danger border border-danger px-2.5 py-1.5 fw-bold" style="font-size: 0.72rem;">
+                                                    <i class="bi bi-x-circle"></i> Đã hủy
+                                                </span>
+                                            }
+                                        </td>
+                                        <td class="text-end pe-4">
+                                            <a asp-controller="AdminOrders" asp-action="Details" asp-route-id="@order.Id" class="btn btn-sm btn-outline-primary py-1 px-2 border-primary-subtle text-primary">
+                                                <i class="bi bi-eye"></i> Xem
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

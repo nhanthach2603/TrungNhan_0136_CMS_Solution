@@ -1,8 +1,289 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Tổng quan Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">thach tran trung nhan</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<!-- Row 1: 4 Metric Cards -->
+<div class="row g-4 mb-4">
+    <!-- Metric 1: Revenue -->
+    <div class="col-sm-6 col-xl-3">
+        <div class="card p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-muted small fw-bold" style="letter-spacing: 0.5px;">TỔNG DOANH THU</span>
+                <i class="bi bi-wallet2 text-success fs-5"></i>
+            </div>
+            <h3 class="fw-bold mb-1" style="font-size: 1.5rem; letter-spacing: -0.5px;">@(((decimal)ViewBag.TotalRevenue).ToString("N0")) đ</h3>
+            <span class="text-success small fw-bold" style="font-size: 0.78rem;">
+                <i class="bi bi-arrow-up-short"></i> +12.5% <span class="text-muted fw-normal">so với tháng trước</span>
+            </span>
+        </div>
+    </div>
+    
+    <!-- Metric 2: Orders -->
+    <div class="col-sm-6 col-xl-3">
+        <div class="card p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-muted small fw-bold" style="letter-spacing: 0.5px;">ĐƠN ĐẶT HÀNG</span>
+                <i class="bi bi-cart3 text-primary fs-5"></i>
+            </div>
+            <h3 class="fw-bold mb-1" style="font-size: 1.5rem; letter-spacing: -0.5px;">@ViewBag.TotalOrders</h3>
+            <span class="text-success small fw-bold" style="font-size: 0.78rem;">
+                <i class="bi bi-arrow-up-short"></i> +8.3% <span class="text-muted fw-normal">đơn hàng mới</span>
+            </span>
+        </div>
+    </div>
+
+    <!-- Metric 3: Customers -->
+    <div class="col-sm-6 col-xl-3">
+        <div class="card p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-muted small fw-bold" style="letter-spacing: 0.5px;">KHÁCH HÀNG</span>
+                <i class="bi bi-people-fill text-warning fs-5"></i>
+            </div>
+            <h3 class="fw-bold mb-1" style="font-size: 1.5rem; letter-spacing: -0.5px;">@ViewBag.TotalCustomers</h3>
+            <span class="text-success small fw-bold" style="font-size: 0.78rem;">
+                <i class="bi bi-arrow-up-short"></i> +15.4% <span class="text-muted fw-normal">khách đăng ký mới</span>
+            </span>
+        </div>
+    </div>
+
+    <!-- Metric 4: Products -->
+    <div class="col-sm-6 col-xl-3">
+        <div class="card p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-muted small fw-bold" style="letter-spacing: 0.5px;">THIẾT BỊ MÁY ẢNH</span>
+                <i class="bi bi-camera-fill text-danger fs-5"></i>
+            </div>
+            <h3 class="fw-bold mb-1" style="font-size: 1.5rem; letter-spacing: -0.5px;">@ViewBag.TotalProducts</h3>
+            <span class="text-muted small" style="font-size: 0.78rem;">
+                <i class="bi bi-check-circle-fill text-success"></i> Đang hoạt động trực tuyến
+            </span>
+        </div>
+    </div>
 </div>
+
+<!-- Row 2: 2 Charts -->
+<div class="row g-4 mb-4">
+    <!-- Line Chart: Sales Trend -->
+    <div class="col-lg-8">
+        <div class="card p-4 h-100">
+            <h5 class="fw-bold mb-3 text-secondary" style="font-size: 1rem;"><i class="bi bi-activity text-warning mr-2" style="margin-right: 6px;"></i> Xu hướng doanh thu bán hàng</h5>
+            <div style="height: 300px; position: relative;">
+                <canvas id="salesChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bar Chart: Top Stock Products -->
+    <div class="col-lg-4">
+        <div class="card p-4 h-100">
+            <h5 class="fw-bold mb-3 text-secondary" style="font-size: 1rem;"><i class="bi bi-bar-chart-fill text-primary mr-2" style="margin-right: 6px;"></i> Lượng máy tồn kho nổi bật</h5>
+            <div style="height: 300px; position: relative;">
+                <canvas id="stockChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Row 3: Data Tables -->
+<div class="row g-4">
+    <!-- Left Table: Recent Orders -->
+    <div class="col-lg-8">
+        <div class="card h-100">
+            <div class="card-header bg-transparent border-0 pt-4 px-4 pb-2 d-flex justify-content-between align-items-center">
+                <h5 class="fw-bold text-secondary mb-0" style="font-size: 1rem;"><i class="bi bi-clock-history mr-2" style="margin-right: 6px;"></i> Các giao dịch gần đây</h5>
+                <a asp-controller="AdminOrders" asp-action="Index" class="btn btn-sm btn-light border py-1 px-3 text-decoration-none" style="font-size: 0.78rem;">Xem tất cả</a>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Mã đơn</th>
+                            <th>Khách hàng</th>
+                            <th>Ngày đặt</th>
+                            <th class="text-end">Tổng tiền</th>
+                            <th>Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            var recentOrdersList = ViewBag.RecentOrders as List<CMS.Data.Entities.Order> ?? new List<CMS.Data.Entities.Order>();
+                        }
+                        @if (!recentOrdersList.Any())
+                        {
+                            <tr><td colspan="5" class="text-center text-muted py-4">Chưa có đơn hàng nào vừa đặt.</td></tr>
+                        }
+                        @foreach (var order in recentOrdersList)
+                        {
+                            var total = order.OrderDetails?.Sum(d => d.UnitPrice * d.Quantity) ?? 0;
+                            <tr>
+                                <td><strong>#@order.Id</strong></td>
+                                <td>@order.Customer?.FullName</td>
+                                <td>@order.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td class="text-end text-danger fw-bold">@total.ToString("N0") đ</td>
+                                <td>
+                                    @if (order.Status == 0)
+                                    {
+                                        <span class="badge bg-warning text-dark"><i class="bi bi-clock-history"></i> Chờ duyệt</span>
+                                    }
+                                    else if (order.Status == 1)
+                                    {
+                                        <span class="badge bg-primary"><i class="bi bi-truck"></i> Đang giao</span>
+                                    }
+                                    else if (order.Status == 2)
+                                    {
+                                        <span class="badge bg-success"><i class="bi bi-check-circle-fill"></i> Hoàn thành</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger"><i class="bi bi-x-circle"></i> Đã hủy</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right List: Top stock devices -->
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-header bg-transparent border-0 pt-4 px-4 pb-2">
+                <h5 class="fw-bold text-secondary mb-0" style="font-size: 1rem;"><i class="bi bi-boxes mr-2" style="margin-right: 6px;"></i> Thiết bị máy ảnh tồn kho nhiều</h5>
+            </div>
+            <div class="card-body px-4 pt-1">
+                <ul class="list-group list-group-flush">
+                    @{
+                        var topStockList = ViewBag.TopStockProducts as List<CMS.Data.Entities.Product> ?? new List<CMS.Data.Entities.Product>();
+                    }
+                    @if (!topStockList.Any())
+                    {
+                        <li class="list-group-item text-center text-muted py-4">Chưa có sản phẩm nào.</li>
+                    }
+                    @foreach (var prod in topStockList)
+                    {
+                        <li class="list-group-item px-0 py-3 d-flex justify-content-between align-items-center border-bottom border-light">
+                            <div class="d-flex align-items-center">
+                                @if (!string.IsNullOrEmpty(prod.ImageUrl))
+                                {
+                                    <img src="@prod.ImageUrl" style="width: 42px; height: 42px; object-fit: cover; border-radius: 6px; margin-right: 12px; border: 1px solid #eee;" />
+                                }
+                                else
+                                {
+                                    <div style="width: 42px; height: 42px; background: #eee; border-radius: 6px; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+                                        <i class="bi bi-camera text-muted"></i>
+                                    </div>
+                                }
+                                <div style="line-height: 1.3;">
+                                    <h6 class="mb-0 fw-bold text-truncate" style="max-width: 150px; font-size: 0.85rem;" title="@prod.Name">@prod.Name</h6>
+                                    <small class="text-danger fw-bold">@prod.Price.ToString("N0") đ</small>
+                                </div>
+                            </div>
+                            <span class="badge bg-light text-dark border fw-bold" style="font-size: 0.72rem;">@prod.StockQuantity cái</span>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            // Detect current theme for chart colors
+            var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            var gridColor  = isDark ? 'rgba(255,255,255,0.06)' : '#f1f5f9';
+            var tickColor  = isDark ? '#8898aa' : '#64748b';
+            var barBg      = isDark ? '#1e3a5f' : '#090d16';
+            var pointBorder = isDark ? '#131d2e' : '#ffffff';
+
+            // 1. Sales Line Chart
+            var ctxSales = document.getElementById('salesChart').getContext('2d');
+            new Chart(ctxSales, {
+                type: 'line',
+                data: {
+                    labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6'],
+                    datasets: [{
+                        label: 'Doanh thu (VNĐ)',
+                        data: [12000000, 19000000, 15000000, 25000000, 22000000, @ViewBag.TotalRevenue],
+                        borderColor: '#f59e0b',
+                        backgroundColor: 'rgba(245,158,11,0.07)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#f59e0b',
+                        pointBorderColor: pointBorder,
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: gridColor },
+                            ticks: {
+                                color: tickColor,
+                                font: { family: 'Inter', size: 11 },
+                                callback: function(v) { return v.toLocaleString('vi-VN') + ' đ'; }
+                            }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: tickColor, font: { family: 'Inter', size: 11 } }
+                        }
+                    }
+                }
+            });
+
+            // 2. Stock Bar Chart
+            var labels = [];
+            var stockData = [];
+            @foreach (var p in topStockList)
+            {
+                @:labels.push('@Html.Raw(p.Name.Length > 14 ? p.Name.Substring(0, 11) + "..." : p.Name)');
+                @:stockData.push(@p.StockQuantity);
+            }
+            if (labels.length === 0) { labels = ['Không có dữ liệu']; stockData = [0]; }
+
+            var ctxStock = document.getElementById('stockChart').getContext('2d');
+            new Chart(ctxStock, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Số lượng tồn',
+                        data: stockData,
+                        backgroundColor: barBg,
+                        hoverBackgroundColor: '#f59e0b',
+                        borderRadius: 6,
+                        barThickness: 20
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: gridColor },
+                            ticks: { color: tickColor, font: { family: 'Inter', size: 11 } }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: tickColor, font: { family: 'Inter', size: 10 } }
+                        }
+                    }
+                }
+            });
+        })();
+    </script>
+}

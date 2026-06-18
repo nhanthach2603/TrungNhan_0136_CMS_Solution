@@ -18,11 +18,18 @@ namespace CMS.Backend.Controllers
             _env = env;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
-            var banners = await _context.BannerImages
-                .OrderBy(b => b.SortOrder)
-                .ToListAsync();
+            const int pageSize = 10;
+            var query = _context.BannerImages.OrderBy(b => b.SortOrder);
+            int total = await query.CountAsync();
+            var banners = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages  = (int)Math.Ceiling(total / (double)pageSize);
+            ViewBag.TotalCount  = total;
+            ViewBag.PageSize    = pageSize;
+            ViewBag.PagingController = "AdminBannerImages";
+            ViewBag.PagingAction = "Index";
             return View(banners);
         }
 

@@ -1,69 +1,112 @@
 @model IEnumerable<CMS.Data.Entities.BannerImage>
-@{ ViewData["Title"] = "Quản lý Banner"; Layout = "~/Views/Shared/_LayoutAdmin.cshtml"; }
+@{ 
+    ViewData["Title"] = "Quản lý Banner"; 
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml"; 
+}
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h4><i class="bi bi-image"></i> Quản lý Banner</h4>
-    <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Thêm mới</a>
+<div class="page-title-block d-flex justify-content-between align-items-center">
+    <div>
+        <h4>Quản lý banner quảng cáo</h4>
+        <p>Quản trị các hình ảnh banner trình chiếu quảng cáo ở trang chủ</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary d-flex align-items-center gap-2">
+        <i class="bi bi-plus-lg"></i> Thêm banner mới
+    </a>
 </div>
 
 @if (TempData["Success"] != null)
 {
-    <div class="alert alert-success alert-dismissible fade show">
-        @TempData["Success"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm mb-4" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i> @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
 
-<table class="table table-bordered table-hover">
-    <thead class="table-dark">
-        <tr>
-            <th width="60">ID</th>
-            <th>Ảnh</th>
-            <th>Tên</th>
-            <th>Link</th>
-            <th width="80">Thứ tự</th>
-            <th width="80">Hiển thị</th>
-            <th width="150">Thao tác</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Id</td>
-                <td>
-                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th class="ps-4" style="width:80px;">MÃ ID</th>
+                        <th style="width:140px;">HÌNH ẢNH</th>
+                        <th>TÊN BANNER</th>
+                        <th>ĐƯỜNG LINK (URL)</th>
+                        <th class="text-center" style="width:90px;">THỨ TỰ</th>
+                        <th class="text-center" style="width:130px;">TRẠNG THÁI</th>
+                        <th class="pe-4" style="width:150px;">THAO TÁC</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
                     {
-                        <img src="@item.ImageUrl" alt="@item.Name" style="height:60px;border-radius:6px;object-fit:cover;" />
+                        <tr>
+                            <td colspan="7" class="text-center text-muted py-5">
+                                <i class="bi bi-images d-block mb-2" style="font-size: 2rem; opacity: 0.35;"></i>
+                                Chưa có hình ảnh banner nào được tải lên.
+                            </td>
+                        </tr>
                     }
                     else
                     {
-                        <span class="text-muted">Không có ảnh</span>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="ps-4 text-secondary fw-bold">#@item.Id</td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                    {
+                                        <img src="@item.ImageUrl" alt="@item.Name"
+                                             style="height:48px; width:120px; border-radius:6px; object-fit:cover; border:1px solid var(--slate-border);"
+                                             onerror="this.onerror=null;this.style.display='none';this.nextElementSibling.style.display='flex';" />
+                                        <div style="display:none;height:48px;width:120px;background:var(--table-head-bg);border-radius:6px;align-items:center;justify-content:center;border:1px solid var(--slate-border);">
+                                            <span class="text-muted small">Không có ảnh</span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div style="height:48px;width:120px;background:var(--table-head-bg);border-radius:6px;display:flex;align-items:center;justify-content:center;border:1px solid var(--slate-border);">
+                                            <span class="text-muted small">Không có ảnh</span>
+                                        </div>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="fw-semibold">@item.Name</div>
+                                </td>
+                                <td>
+                                    <span class="text-muted small">@(string.IsNullOrEmpty(item.LinkUrl) ? "—" : item.LinkUrl)</span>
+                                </td>
+                                <td class="text-center fw-semibold">@item.SortOrder</td>
+                                <td class="text-center">
+                                    @if (item.IsActive)
+                                    {
+                                        <span class="badge bg-success-subtle text-success border border-success px-2 py-1 fw-bold" style="font-size:0.72rem;">Đang hiển thị</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary-subtle text-secondary border border-secondary px-2 py-1 fw-bold" style="font-size:0.72rem;">Đang ẩn</span>
+                                    }
+                                </td>
+                                <td class="pe-4">
+                                    <div class="action-buttons">
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning">
+                                            <i class="bi bi-pencil"></i> Sửa
+                                        </a>
+                                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline"
+                                              onsubmit="return confirm('Bạn có chắc chắn muốn xóa banner này?')">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
                     }
-                </td>
-                <td>@item.Name</td>
-                <td><small>@item.LinkUrl</small></td>
-                <td class="text-center">@item.SortOrder</td>
-                <td class="text-center">
-                    @if (item.IsActive)
-                    {
-                        <span class="badge bg-success">Bật</span>
-                    }
-                    else
-                    {
-                        <span class="badge bg-secondary">Tắt</span>
-                    }
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">
-                        <i class="bi bi-pencil"></i>
-                    </a>
-                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline"
-                          onsubmit="return confirm('Xóa banner này?')">
-                        <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
-                    </form>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("_Pagination")

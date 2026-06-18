@@ -1,51 +1,108 @@
 @{
     Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Quản lý sản phẩm";
 }
 @model IEnumerable<CMS.Data.Entities.Product>
 
-<h2 class="text-primary"><i class="bi bi-box"></i> QUẢN LÝ SẢN PHẨM</h2>
-<hr />
-<a asp-action="Create" class="btn btn-success mb-3">
-    <i class="bi bi-plus-circle"></i> Thêm sản phẩm mới
-</a>
+<div class="page-title-block d-flex justify-content-between align-items-center">
+    <div>
+        <h4>Quản lý sản phẩm</h4>
+        <p>Xem, thêm mới, cập nhật và quản trị danh sách thiết bị máy ảnh trực tuyến</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary d-flex align-items-center gap-2">
+        <i class="bi bi-plus-lg"></i> Thêm sản phẩm mới
+    </a>
+</div>
 
-<table class="table table-bordered table-hover align-middle">
-    <thead class="table-dark">
-        <tr>
-            <th>ID</th>
-            <th>Hình</th>
-            <th>Tên sản phẩm</th>
-            <th>Danh mục</th>
-            <th>Giá</th>
-            <th>Tồn kho</th>
-            <th style="width:160px">Thao tác</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (!Model.Any())
-        {
-            <tr><td colspan="7" class="text-center text-muted">Chưa có sản phẩm nào.</td></tr>
-        }
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Id</td>
-                <td>
-                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th class="ps-4" style="width:80px;">MÃ SP</th>
+                        <th style="width:72px;">HÌNH ẢNH</th>
+                        <th>TÊN THIẾT BỊ</th>
+                        <th style="width:150px;">DANH MỤC</th>
+                        <th style="width:130px;">ĐƠN GIÁ</th>
+                        <th style="width:110px;">TỒN KHO</th>
+                        <th class="pe-4" style="width:150px;">THAO TÁC</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
                     {
-                        <img src="@item.ImageUrl" style="width:50px;height:50px;object-fit:cover" />
+                        <tr>
+                            <td colspan="7" class="text-center text-muted py-5">
+                                <i class="bi bi-box-seam d-block mb-2" style="font-size: 2rem; opacity: 0.35;"></i>
+                                Chưa có sản phẩm nào được tạo.
+                            </td>
+                        </tr>
                     }
-                </td>
-                <td><strong>@item.Name</strong></td>
-                <td><span class="badge bg-secondary">@item.CategoryProduct?.Name</span></td>
-                <td class="text-danger fw-bold">@item.Price.ToString("N0") đ</td>
-                <td>@item.StockQuantity</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning">Sửa</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger"
-                       onclick="return confirm('Xóa sản phẩm này?')">Xóa</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                    else
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="ps-4 text-secondary fw-bold">#@item.Id</td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                    {
+                                        <img src="@item.ImageUrl"
+                                             style="width:48px;height:48px;object-fit:cover;border-radius:8px;border:1px solid var(--slate-border);"
+                                             onerror="this.onerror=null;this.style.display='none';this.nextElementSibling.style.display='flex';" />
+                                        <div style="display:none;width:48px;height:48px;background:var(--table-head-bg);border-radius:8px;align-items:center;justify-content:center;border:1px solid var(--slate-border);">
+                                            <i class="bi bi-camera text-muted"></i>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div style="width:48px;height:48px;background:var(--table-head-bg);border-radius:8px;display:flex;align-items:center;justify-content:center;border:1px solid var(--slate-border);">
+                                            <i class="bi bi-camera text-muted"></i>
+                                        </div>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="fw-semibold text-truncate" style="max-width:240px;" title="@item.Name">@item.Name</div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-light text-dark border px-2 fw-semibold" style="font-size:0.75rem;">
+                                        @item.CategoryProduct?.Name
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="text-danger fw-bold">@item.Price.ToString("N0") đ</span>
+                                </td>
+                                <td>
+                                    @if (item.StockQuantity <= 5)
+                                    {
+                                        <span class="badge bg-danger-subtle text-danger border border-danger px-2 py-1 fw-bold" style="font-size:0.72rem;">
+                                            Chỉ còn @item.StockQuantity cái
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="fw-semibold">@item.StockQuantity cái</span>
+                                    }
+                                </td>
+                                <td class="pe-4">
+                                    <div class="action-buttons">
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning">
+                                            <i class="bi bi-pencil"></i> Sửa
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger"
+                                           onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')">
+                                            <i class="bi bi-trash"></i> Xóa
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("_Pagination")

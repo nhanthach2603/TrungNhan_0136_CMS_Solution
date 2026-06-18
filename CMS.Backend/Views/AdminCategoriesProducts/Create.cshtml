@@ -1,21 +1,39 @@
 @{
     Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Thêm danh mục sản phẩm";
 }
 @model CMS.Data.Entities.CategoryProduct
 
-<h2 class="text-primary">Thêm danh mục sản phẩm</h2>
-<hr />
+<div class="mb-4">
+    <a asp-action="Index" class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-1 mb-2" style="font-size: 0.8rem; padding: 4px 12px;">
+        <i class="bi bi-arrow-left"></i> Quay lại danh sách
+    </a>
+    <h4 class="fw-bold text-dark mb-1">Thêm danh mục sản phẩm</h4>
+    <p class="text-muted small mb-0">Tạo mới một phân loại sản phẩm trong hệ thống cửa hàng</p>
+</div>
 
-<form asp-action="Create" method="post">
-    <div class="mb-3">
-        <label class="form-label fw-bold">Tên danh mục:</label>
-        <input asp-for="Name" class="form-control" required />
-        <span asp-validation-for="Name" class="text-danger"></span>
+<div class="card shadow-sm border-0" style="max-width: 600px;">
+    <div class="card-body p-4">
+        <form asp-action="Create" method="post">
+            <div class="mb-3">
+                <label class="form-label fw-bold text-secondary" style="font-size: 0.85rem;">Tên danh mục:</label>
+                <input asp-for="Name" class="form-control" placeholder="Nhập tên danh mục..." required />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            
+            <div class="mb-4">
+                <label class="form-label fw-bold text-secondary" style="font-size: 0.85rem;">Mô tả:</label>
+                <textarea asp-for="Description" class="form-control" rows="4" placeholder="Nhập mô tả danh mục..."></textarea>
+            </div>
+            
+            <hr class="my-4" style="border-color: var(--slate-border);" />
+            
+            <div class="d-flex justify-content-end gap-2">
+                <a asp-action="Index" class="btn btn-outline-secondary py-2 px-3">Hủy bỏ</a>
+                <button type="submit" class="btn btn-primary py-2 px-4 d-inline-flex align-items-center gap-1">
+                    <i class="bi bi-check-lg"></i> Lưu danh mục
+                </button>
+            </div>
+        </form>
     </div>
-    <div class="mb-3">
-        <label class="form-label fw-bold">Mô tả:</label>
-        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
-    </div>
-    <button type="submit" class="btn btn-success"><i class="bi bi-save"></i> Lưu</button>
-    <a asp-action="Index" class="btn btn-secondary">Hủy</a>
-</form>
+</div>

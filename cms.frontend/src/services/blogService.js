@@ -8,6 +8,10 @@ const blogService = {
     getAllPosts: () => {
         const url = '/Posts';
         return axiosClient.get(url);
+    },
+    getPostById: (id) => {
+        const url = `/Posts/${id}`;
+        return axiosClient.get(url);
     }
 };
 

@@ -26,9 +26,18 @@ namespace CMS.Backend.Controllers
         }
 
         // Hiển thị danh sách bài viết
-        public IActionResult Index()
+        public IActionResult Index(int page = 1)
         {
-            var posts = _context.Posts.ToList();
+            const int pageSize = 9;
+            var query = _context.Posts.Include(p => p.Category).OrderByDescending(p => p.CreatedDate);
+            int total = query.Count();
+            var posts = query.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages  = (int)Math.Ceiling(total / (double)pageSize);
+            ViewBag.TotalCount  = total;
+            ViewBag.PageSize    = pageSize;
+            ViewBag.PagingController = "Post";
+            ViewBag.PagingAction = "Index";
             return View(posts);
         }
 

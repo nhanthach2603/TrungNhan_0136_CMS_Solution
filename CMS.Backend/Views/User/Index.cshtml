@@ -1,52 +1,82 @@
 @{
     Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Tài khoản Admin";
 }
 @model IEnumerable<CMS.Data.Entities.User>
 
-<h2 class="text-dark">QUẢN LÝ THÀNH VIÊN</h2>
+<div class="page-title-block d-flex justify-content-between align-items-center">
+    <div>
+        <h4>Quản lý tài khoản quản trị</h4>
+        <p>Quản trị danh sách quản trị viên và biên tập viên có quyền truy cập hệ thống</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary d-flex align-items-center gap-2">
+        <i class="bi bi-plus-lg"></i> Thêm thành viên mới
+    </a>
+</div>
 
-<a asp-action="Create" class="btn btn-success mb-3">
-    <i class="bi bi-plus-circle"></i> Thêm thành viên mới
-</a>
-
-<table class="table table-hover shadow-sm border">
-    <thead class="table-light">
-        <tr>
-            <th>ID</th>
-            <th>Tên Đăng Nhập</th>
-            <th>Họ Và Tên</th>
-            <th>Quyền Hạn</th>
-            <th>Thao Tác</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in Model)
-        {
-            <tr>
-                <td>@user.Id</td>
-                <td><strong>@user.Username</strong></td>
-                <td>@user.FullName</td>
-                <td>
-                    @if (user.Role == "Admin")
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th class="ps-4" style="width:80px;">MÃ ID</th>
+                        <th>TÊN ĐĂNG NHẬP</th>
+                        <th>HỌ VÀ TÊN</th>
+                        <th style="width:160px;">QUYỀN HẠN</th>
+                        <th class="pe-4" style="width:150px;">THAO TÁC</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
                     {
-                        <span class="badge bg-danger">@user.Role</span>
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-5">
+                                <i class="bi bi-shield-lock d-block mb-2" style="font-size:2rem; opacity:0.35;"></i>
+                                Chưa có tài khoản quản trị nào.
+                            </td>
+                        </tr>
                     }
                     else
                     {
-                        <span class="badge bg-info text-dark">@user.Role</span>
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+                                <td class="ps-4 text-secondary fw-bold">#@user.Id</td>
+                                <td>
+                                    <strong>@user.Username</strong>
+                                </td>
+                                <td>@user.FullName</td>
+                                <td>
+                                    @if (user.Role == "Admin")
+                                    {
+                                        <span class="badge bg-danger-subtle text-danger border border-danger px-2 py-1 fw-bold" style="font-size:0.72rem;">
+                                            <i class="bi bi-shield-fill-check me-1"></i>@user.Role
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-info-subtle text-info border border-info px-2 py-1 fw-bold" style="font-size:0.72rem;">
+                                            <i class="bi bi-pencil-square me-1"></i>@user.Role
+                                        </span>
+                                    }
+                                </td>
+                                <td class="pe-4">
+                                    <div class="action-buttons">
+                                        <a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-sm btn-outline-warning">
+                                            <i class="bi bi-pencil"></i> Sửa
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@user.Id" class="btn btn-sm btn-outline-danger"
+                                           onclick="return confirm('Bạn có chắc chắn muốn xóa thành viên này?')">
+                                            <i class="bi bi-trash"></i> Xóa
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
                     }
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-sm btn-outline-warning">
-                        <i class="bi bi-pencil"></i> Sửa
-                    </a>
-                    <a asp-action="Delete" asp-route-id="@user.Id"
-                       class="btn btn-sm btn-outline-danger"
-                       onclick="return confirm('Bạn có chắc chắn muốn xóa thành viên này?')">
-                        <i class="bi bi-trash"></i> Xóa
-                    </a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
