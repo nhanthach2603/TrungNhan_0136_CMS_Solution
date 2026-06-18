@@ -1,0 +1,184 @@
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Thêm sản phẩm mới";
+}
+@model CMS.Data.Entities.Product
+
+<style>
+    input[type="file"].form-control {
+        color: var(--text-main) !important;
+        background-color: var(--input-bg) !important;
+        border-color: var(--slate-border) !important;
+    }
+    input[type="file"].form-control::file-selector-button {
+        background-color: var(--slate-border);
+        color: var(--text-main);
+        border: none;
+        border-right: 1px solid var(--slate-border);
+        padding: 0.375rem 0.75rem;
+        margin-right: 0.75rem;
+        border-radius: 6px 0 0 6px;
+        cursor: pointer;
+        transition: background-color 0.15s;
+    }
+    input[type="file"].form-control::file-selector-button:hover {
+        background-color: #f59e0b;
+        color: #000;
+    }
+    .upload-zone {
+        border: 2px dashed var(--slate-border);
+        border-radius: 10px;
+        padding: 28px 16px;
+        text-align: center;
+        cursor: pointer;
+        background: var(--table-head-bg);
+        color: var(--text-muted);
+        transition: all 0.2s;
+    }
+    .upload-zone:hover {
+        border-color: #f59e0b;
+        background: rgba(245,158,11,0.06);
+        color: var(--text-main);
+    }
+    .upload-zone i { font-size: 2rem; display: block; margin-bottom: 8px; }
+    .new-upload-previews {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+    }
+    .new-preview-item {
+        position: relative;
+        width: 80px;
+        height: 80px;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 2px solid #f59e0b;
+        flex-shrink: 0;
+    }
+    .new-preview-item img { width: 100%; height: 100%; object-fit: cover; }
+    .new-preview-item .rm-new {
+        position: absolute;
+        top: 2px; right: 2px;
+        width: 20px; height: 20px;
+        background: rgba(239,68,68,0.9);
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        font-size: 0.65rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+
+<div class="mb-4">
+    <a asp-action="Index" class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-1 mb-2" style="font-size:0.8rem;padding:4px 12px;">
+        <i class="bi bi-arrow-left"></i> Quay lại danh sách
+    </a>
+    <h4 class="fw-bold mb-1">Thêm sản phẩm mới</h4>
+    <p class="text-muted small mb-0">Tạo mới một sản phẩm máy ảnh trong hệ thống cửa hàng</p>
+</div>
+
+<div class="card shadow-sm border-0" style="max-width: 800px;">
+    <div class="card-body p-4">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label class="form-label fw-bold text-secondary" style="font-size: 0.85rem;">Tên sản phẩm:</label>
+                <input asp-for="Name" class="form-control" placeholder="Nhập tên sản phẩm..." required />
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label fw-bold text-secondary" style="font-size: 0.85rem;">Mô tả sản phẩm:</label>
+                <textarea asp-for="Description" class="form-control" rows="4" placeholder="Mô tả thông tin chi tiết về sản phẩm..."></textarea>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold text-secondary" style="font-size: 0.85rem;">Giá bán (VND):</label>
+                    <input asp-for="Price" type="number" step="1000" class="form-control" placeholder="Ví dụ: 12000000" required />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold text-secondary" style="font-size: 0.85rem;">Số lượng tồn kho:</label>
+                    <input asp-for="StockQuantity" type="number" class="form-control" placeholder="Ví dụ: 15" required />
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label fw-bold text-secondary" style="font-size: 0.85rem;">Danh mục sản phẩm:</label>
+                <select asp-for="CategoryProductId" asp-items="@ViewBag.CategoryList" class="form-select" required>
+                    <option value="">-- Chọn danh mục sản phẩm --</option>
+                </select>
+            </div>
+            
+            <div class="mb-4">
+                <label class="form-label">Hình ảnh sản phẩm:</label>
+                <div class="upload-zone" id="uploadZone" onclick="document.getElementById('uploadImages').click()">
+                    <i class="bi bi-cloud-upload"></i>
+                    <strong style="font-size:0.9rem;">Chọn ảnh sản phẩm</strong>
+                    <p class="mb-0 mt-1" style="font-size:0.78rem;">Kéo thả hoặc nhấp để chọn nhiều ảnh (JPG, PNG, WEBP)</p>
+                </div>
+                <input type="file" id="uploadImages" name="uploadImages" multiple accept="image/*" style="display:none;" />
+                <div class="new-upload-previews" id="newPreviews"></div>
+                <small class="text-muted mt-1 d-block"><i class="bi bi-info-circle me-1"></i>Ảnh đầu tiên sẽ được dùng làm ảnh đại diện.</small>
+            </div>
+            
+            <hr class="my-4" style="border-color: var(--slate-border);" />
+            
+            <div class="d-flex justify-content-end gap-2">
+                <a asp-action="Index" class="btn btn-outline-secondary py-2 px-3">Hủy bỏ</a>
+                <button type="submit" class="btn btn-primary py-2 px-4 d-inline-flex align-items-center gap-1">
+                    <i class="bi bi-check-lg"></i> Lưu sản phẩm
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var zone = document.getElementById('uploadZone');
+        zone.addEventListener('dragover', function(e) { e.preventDefault(); zone.style.borderColor='#f59e0b'; });
+        zone.addEventListener('dragleave', function() { zone.style.borderColor=''; });
+        zone.addEventListener('drop', function(e) {
+            e.preventDefault();
+            zone.style.borderColor='';
+            var input = document.getElementById('uploadImages');
+            var dt = new DataTransfer();
+            if (input.files) Array.from(input.files).forEach(f => dt.items.add(f));
+            Array.from(e.dataTransfer.files).forEach(f => { if (f.type.startsWith('image/')) dt.items.add(f); });
+            input.files = dt.files;
+            previewNewFiles(input.files);
+        });
+
+        document.getElementById('uploadImages').addEventListener('change', function() {
+            previewNewFiles(this.files);
+        });
+
+        function previewNewFiles(files) {
+            var container = document.getElementById('newPreviews');
+            container.innerHTML = '';
+            Array.from(files).forEach(function(file, index) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var div = document.createElement('div');
+                    div.className = 'new-preview-item';
+                    div.innerHTML = '<img src="' + e.target.result + '" alt="preview" />'
+                        + (index === 0 ? '<span style="position:absolute;bottom:3px;left:3px;background:#f59e0b;color:#000;font-size:0.55rem;font-weight:700;padding:1px 5px;border-radius:3px;">CHÍNH</span>' : '')
+                        + '<button type="button" class="rm-new" onclick="removeNewFile(' + index + ')"><i class="bi bi-x"></i></button>';
+                    container.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function removeNewFile(index) {
+            var input = document.getElementById('uploadImages');
+            var dt = new DataTransfer();
+            Array.from(input.files).forEach(function(f, i) { if (i !== index) dt.items.add(f); });
+            input.files = dt.files;
+            previewNewFiles(input.files);
+        }
+    </script>
+}

@@ -1,0 +1,32 @@
+@* _OrderStatusBadge.cshtml — Partial view hiển thị badge trạng thái đơn hàng
+   Dùng chung cho Index.cshtml và Details.cshtml của AdminOrders
+   
+   Cách dùng: @await Html.PartialAsync("_OrderStatusBadge", (int)Model.Status)
+           hoặc: @await Html.PartialAsync("_OrderStatusBadge", (int)item.Status)
+*@
+@model int
+
+@if (Model == 0)
+{
+    <span class="badge bg-warning-subtle text-warning border border-warning px-2 py-1 fw-bold" style="font-size:0.72rem;">
+        <i class="bi bi-clock-history"></i> Chờ duyệt
+    </span>
+}
+else if (Model == 1)
+{
+    <span class="badge bg-primary-subtle text-primary border border-primary px-2 py-1 fw-bold" style="font-size:0.72rem;">
+        <i class="bi bi-truck"></i> Đang giao
+    </span>
+}
+else if (Model == 2)
+{
+    <span class="badge bg-success-subtle text-success border border-success px-2 py-1 fw-bold" style="font-size:0.72rem;">
+        <i class="bi bi-check-circle-fill"></i> Hoàn thành
+    </span>
+}
+else
+{
+    <span class="badge bg-danger-subtle text-danger border border-danger px-2 py-1 fw-bold" style="font-size:0.72rem;">
+        <i class="bi bi-x-circle"></i> Đã hủy
+    </span>
+}

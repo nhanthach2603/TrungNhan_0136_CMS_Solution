@@ -1,0 +1,77 @@
+@model CMS.Data.Entities.BannerImage
+@{ 
+    ViewData["Title"] = "Sửa Banner"; 
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml"; 
+}
+
+<div class="mb-4">
+    <a asp-action="Index" class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-1 mb-2" style="font-size: 0.8rem; padding: 4px 12px;">
+        <i class="bi bi-arrow-left"></i> Quay lại danh sách
+    </a>
+    <h4 class="fw-bold text-dark mb-1">Cập nhật banner</h4>
+    <p class="text-muted small mb-0">Chỉnh sửa thông tin hình ảnh banner trình chiếu quảng cáo ở trang chủ</p>
+</div>
+
+<div class="card shadow-sm border-0" style="max-width: 800px;">
+    <div class="card-body p-4">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="ImageUrl" />
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold text-secondary" style="font-size: 0.85rem;">Tên banner:</label>
+                <input asp-for="Name" class="form-control" required />
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <small class="text-muted d-block mb-1">Ảnh hiện tại:</small>
+                    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                    {
+                        <img src="@Model.ImageUrl" alt="@Model.Name" style="max-height:80px; width: 100%; border-radius:6px; object-fit:cover; border: 1px solid var(--slate-border);" />
+                    }
+                    else
+                    {
+                        <div class="p-3 text-center bg-light border rounded">
+                            <span class="text-muted small">Chưa có ảnh</span>
+                        </div>
+                    }
+                </div>
+                <div class="col-md-8 d-flex flex-column justify-content-center">
+                    <label class="form-label fw-bold text-secondary" style="font-size: 0.85rem;">Thay đổi ảnh banner mới (bỏ trống nếu giữ ảnh cũ):</label>
+                    <input type="file" name="uploadImage" class="form-control" accept="image/*" />
+                    <small class="text-muted mt-1">Hỗ trợ JPG, PNG, WEBP. Kích thước khuyến nghị: 1920x600px.</small>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold text-secondary" style="font-size: 0.85rem;">Đường link liên kết (Tùy chọn):</label>
+                <input asp-for="LinkUrl" class="form-control" placeholder="Ví dụ: /product/1 hoặc https://..." />
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold text-secondary" style="font-size: 0.85rem;">Thứ tự hiển thị:</label>
+                    <input asp-for="SortOrder" type="number" class="form-control" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold text-secondary" style="font-size: 0.85rem;">Trạng thái:</label>
+                    <select asp-for="IsActive" class="form-select">
+                        <option value="true">Hiển thị</option>
+                        <option value="false">Ẩn</option>
+                    </select>
+                </div>
+            </div>
+
+            <hr class="my-4" style="border-color: var(--slate-border);" />
+
+            <div class="d-flex justify-content-end gap-2">
+                <a asp-action="Index" class="btn btn-outline-secondary py-2 px-3">Hủy bỏ</a>
+                <button type="submit" class="btn btn-primary py-2 px-4 d-inline-flex align-items-center gap-1">
+                    <i class="bi bi-check-lg"></i> Cập nhật banner
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
