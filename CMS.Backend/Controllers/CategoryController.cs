@@ -8,8 +8,10 @@
 
 using CMS.Data;
 using CMS.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+[Authorize]
 public class CategoryController : Controller
 {
     private readonly ApplicationDbContext _context;

@@ -1,0 +1,84 @@
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Quản lý đơn hàng";
+}
+@model IEnumerable<CMS.Data.Entities.Order>
+
+<div class="page-title-block">
+    <h4>Quản lý đơn đặt hàng</h4>
+    <p>Theo dõi, duyệt trạng thái giao hàng và quản lý hóa đơn của khách hàng</p>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th class="ps-4" style="width:80px;">MÃ ĐƠN</th>
+                        <th>KHÁCH HÀNG</th>
+                        <th style="width:150px;">NGÀY ĐẶT HÀNG</th>
+                        <th style="width:130px;">TỔNG TIỀN</th>
+                        <th>GHI CHÚ GIAO HÀNG</th>
+                        <th style="width:130px;">TRẠNG THÁI</th>
+                        <th class="pe-4" style="width:160px;">THAO TÁC</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center text-muted py-5">
+                                <i class="bi bi-receipt d-block mb-2" style="font-size: 2rem; opacity: 0.35;"></i>
+                                Chưa có đơn hàng nào được đặt.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var item in Model)
+                        {
+                            var totalAmount = item.OrderDetails?.Sum(d => d.UnitPrice * d.Quantity) ?? 0;
+                            <tr>
+                                <td class="ps-4 text-secondary fw-bold">#@item.Id</td>
+                                <td>
+                                    <div class="fw-semibold">@item.Customer?.FullName</div>
+                                    <small class="text-muted" style="font-size:0.75rem;">@item.Customer?.Email</small>
+                                </td>
+                                <td>
+                                    <span>@item.OrderDate.ToString("dd/MM/yyyy HH:mm")</span>
+                                </td>
+                                <td>
+                                    <span class="text-danger fw-bold">@totalAmount.ToString("N0") đ</span>
+                                </td>
+                                <td>
+                                    <div class="text-truncate text-muted" style="max-width:180px;" title="@item.Notes">
+                                        @(string.IsNullOrEmpty(item.Notes) ? "—" : item.Notes)
+                                    </div>
+                                </td>
+                                <td>
+                                    @await Html.PartialAsync("_OrderStatusBadge", (int)item.Status)
+                                </td>
+                                <td class="pe-4">
+                                    <div class="action-buttons">
+                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info">
+                                            <i class="bi bi-eye"></i> Chi tiết
+                                        </a>
+                                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline"
+                                              onsubmit="return confirm('Bạn có chắc chắn muốn xóa đơn hàng này?')">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("_Pagination")

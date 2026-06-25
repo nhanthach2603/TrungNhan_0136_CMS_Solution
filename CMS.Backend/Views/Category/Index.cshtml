@@ -1,33 +1,69 @@
-﻿@model IEnumerable<CMS.Data.Entities.Category>
-<h2 class="text-primary">DANH SÁCH DANH MỤC (DỮ LIỆU THẬT LẤY TỪ DATABASE)</h2>
-<a asp-action="Create" class="btn btn-success">
-    <i class="bi bi-plus-circle"></i> Thêm danh mục mới
-</a>
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Tên danh mục</th>
-            <th>Mô tả</th>
-            <th style="width:150px">Thao tác</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Id</td>
-                <td>@item.Name</td>
-                <td>@item.Description</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id"
-                       class="btn btn-sm btn-outline-warning">Sửa</a>
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Danh mục bài viết";
+}
+@model IEnumerable<CMS.Data.Entities.Category>
 
-                    <a asp-action="Delete" asp-route-id="@item.Id"
-                       class="btn btn-sm btn-outline-danger"
-                       onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này?')">Xóa</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="page-title-block d-flex justify-content-between align-items-center">
+    <div>
+        <h4>Quản lý danh mục bài viết</h4>
+        <p>Quản trị các danh mục phân loại bài viết tin tức của website</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary d-flex align-items-center gap-2">
+        <i class="bi bi-plus-lg"></i> Thêm danh mục mới
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th class="ps-4" style="width:100px;">MÃ DANH MỤC</th>
+                        <th style="width:220px;">TÊN DANH MỤC</th>
+                        <th>MÔ TẢ CHI TIẾT</th>
+                        <th class="pe-4" style="width:150px;">THAO TÁC</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center text-muted py-5">
+                                <i class="bi bi-folder-x d-block mb-2" style="font-size: 2rem; opacity: 0.35;"></i>
+                                Chưa có danh mục nào được tạo.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="ps-4 text-secondary fw-bold">#@item.Id</td>
+                                <td>
+                                    <span class="fw-semibold">@item.Name</span>
+                                </td>
+                                <td>
+                                    <span class="text-muted small">@item.Description</span>
+                                </td>
+                                <td class="pe-4">
+                                    <div class="action-buttons">
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning">
+                                            <i class="bi bi-pencil"></i> Sửa
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger"
+                                           onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này?')">
+                                            <i class="bi bi-trash"></i> Xóa
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

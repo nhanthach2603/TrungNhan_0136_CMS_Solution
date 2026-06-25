@@ -1,0 +1,48 @@
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Sửa khách hàng";
+}
+@model CMS.Data.Entities.Customer
+
+<div class="page-title-block">
+    <h4><i class="bi bi-pencil-square"></i> Sửa thông tin khách hàng</h4>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form asp-action="Edit">
+            <input type="hidden" asp-for="Id" />
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Họ và tên <span class="text-danger">*</span></label>
+                    <input asp-for="FullName" class="form-control" required />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Email <span class="text-danger">*</span></label>
+                    <input asp-for="Email" type="email" class="form-control" required />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Mật khẩu (để trống nếu giữ nguyên)</label>
+                    <input asp-for="Password" type="password" class="form-control" placeholder="Nhập mật khẩu mới" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Số điện thoại</label>
+                    <input asp-for="Phone" class="form-control" />
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Địa chỉ</label>
+                <input asp-for="Address" class="form-control" />
+            </div>
+
+            <button type="submit" class="btn btn-primary"><i class="bi bi-check-circle"></i> Cập nhật</button>
+            <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+        </form>
+    </div>
+</div>
