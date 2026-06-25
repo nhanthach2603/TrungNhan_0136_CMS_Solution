@@ -117,14 +117,14 @@ const Header = () => {
                         <Link to="/" className="nav-link-item active">
                             <i className="fa-solid fa-house mr-1"></i> Trang Chủ
                         </Link>
-                        <Link to="/?category=all" className="nav-link-item">
+                        <Link to="/?category=7" className="nav-link-item">
                             <i className="fa-solid fa-camera mr-1"></i> Máy ảnh mới
                         </Link>
-                        <Link to="/?category=all" className="nav-link-item">
+                        <Link to="/?category=8" className="nav-link-item">
                             <i className="fa-solid fa-bullseye mr-1"></i> Ống kính
                         </Link>
-                        <Link to="/?category=all" className="nav-link-item">
-                            <i className="fa-solid fa-newspaper mr-1"></i> Tin Tức Công Nghệ
+                        <Link to="/blog" className="nav-link-item">
+                            <i className="fa-solid fa-newspaper mr-1"></i> Tin tức công nghệ
                         </Link>
                     </div>
                 </div>

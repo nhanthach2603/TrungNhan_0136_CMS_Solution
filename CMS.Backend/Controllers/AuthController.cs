@@ -60,11 +60,12 @@ namespace CMS.Backend.Controllers
                 return Conflict(new { message = "Email đã được sử dụng!" });
             }
 
+            // Mã hóa mật khẩu bằng BCrypt trước khi lưu
             var customer = new Customer
             {
                 FullName = input.FullName,
                 Email = input.Email,
-                Password = input.Password, // Lưu thô theo yêu cầu tối giản
+                Password = BCrypt.Net.BCrypt.HashPassword(input.Password),
                 Phone = input.Phone,
                 Address = input.Address
             };
@@ -92,11 +93,17 @@ namespace CMS.Backend.Controllers
                 return BadRequest(new { message = "Vui lòng nhập Email và Mật khẩu!" });
             }
 
+            // Tìm khách hàng theo email
             var customer = await _context.Customers
-                .FirstOrDefaultAsync(c => c.Email.ToLower() == input.Email.ToLower()
-                                       && c.Password == input.Password);
+                .FirstOrDefaultAsync(c => c.Email.ToLower() == input.Email.ToLower());
 
             if (customer == null)
+            {
+                return Unauthorized(new { message = "Email hoặc mật khẩu không đúng!" });
+            }
+
+            // Xác minh mật khẩu bằng BCrypt
+            if (!BCrypt.Net.BCrypt.Verify(input.Password, customer.Password))
             {
                 return Unauthorized(new { message = "Email hoặc mật khẩu không đúng!" });
             }

@@ -203,7 +203,7 @@ const HomePage = () => {
                                 <div className="promo-card-content">
                                     <h4>ỐNG KÍNH ĐỈNH CAO</h4>
                                     <p>Sony GM, Canon L-Series, Fujifilm XF</p>
-                                    <button onClick={() => handleSelectCategory('all')} className="btn-promo-action">Xem ngay <i className="fa-solid fa-circle-chevron-right"></i></button>
+                                    <button onClick={() => handleSelectCategory(8)} className="btn-promo-action">Xem ngay <i className="fa-solid fa-circle-chevron-right"></i></button>
                                 </div>
                             </div>
                             <div className="side-promo-card promo-studio" style={{ backgroundImage: `url('https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=400&q=80')` }}>
@@ -211,7 +211,7 @@ const HomePage = () => {
                                 <div className="promo-card-content">
                                     <h4>PHỤ KIỆN STUDIO</h4>
                                     <p>Gimbal, Chân máy, Tủ chống ẩm giảm 30%</p>
-                                    <button onClick={() => handleSelectCategory('all')} className="btn-promo-action">Xem ngay <i className="fa-solid fa-circle-chevron-right"></i></button>
+                                    <button onClick={() => handleSelectCategory(9)} className="btn-promo-action">Xem ngay <i className="fa-solid fa-circle-chevron-right"></i></button>
                                 </div>
                             </div>
                         </div>

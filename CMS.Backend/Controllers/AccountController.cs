@@ -33,10 +33,10 @@ namespace CMS.Backend.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string username, string password)
         {
-            // Tìm user trong database
-            var user = _context.Users.FirstOrDefault(u => u.Username == username && u.PasswordHash == password);
+            // Tìm user theo username
+            var user = _context.Users.FirstOrDefault(u => u.Username == username);
 
-            if (user != null)
+            if (user != null && BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
             {
                 // Tạo danh sách Claims
                 var claims = new List<Claim>

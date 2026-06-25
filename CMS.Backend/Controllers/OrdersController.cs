@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CMS.Data;
 using CMS.Data.Entities;
+using CMS.Backend.Services;
 
 namespace CMS.Backend.Controllers
 {
@@ -31,10 +32,12 @@ namespace CMS.Backend.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly EmailService _emailService;
 
-        public OrdersController(ApplicationDbContext context)
+        public OrdersController(ApplicationDbContext context, EmailService emailService)
         {
             _context = context;
+            _emailService = emailService;
         }
 
         // POST: api/orders
@@ -102,6 +105,44 @@ namespace CMS.Backend.Controllers
             }
 
             await _context.SaveChangesAsync();
+
+            // Gửi email xác nhận cho khách hàng
+            try
+            {
+                var customer = await _context.Customers.FindAsync(input.CustomerId);
+                if (customer != null && !string.IsNullOrEmpty(customer.Email))
+                {
+                    var emailItems = new List<OrderEmailItem>();
+                    foreach (var item in input.Items)
+                    {
+                        var product = await _context.Products.FindAsync(item.ProductId);
+                        if (product != null)
+                        {
+                            emailItems.Add(new OrderEmailItem
+                            {
+                                ProductName = product.Name,
+                                UnitPrice = product.Price,
+                                Quantity = item.Quantity
+                            });
+                        }
+                    }
+
+                    await _emailService.SendOrderConfirmationAsync(
+                        customer.Email,
+                        customer.FullName,
+                        newOrder.Id,
+                        newOrder.OrderDate,
+                        emailItems,
+                        totalAmount,
+                        input.Notes
+                    );
+                }
+            }
+            catch (Exception ex)
+            {
+                // Không làm đơn hàng fail nếu gửi email lỗi
+                Console.WriteLine($"Email error: {ex.Message}");
+            }
 
             return StatusCode(201, new
             {
