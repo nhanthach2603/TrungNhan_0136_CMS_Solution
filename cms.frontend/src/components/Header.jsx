@@ -11,6 +11,7 @@ const Header = () => {
     const fullName = localStorage.getItem('fullName');
     const isLoggedIn = !!localStorage.getItem('customerId');
     const [categories, setCategories] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -23,6 +24,13 @@ const Header = () => {
         };
         fetchCategories();
     }, []);
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        if (searchQuery.trim()) {
+            navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+        }
+    };
 
     const handleLogout = (e) => {
         e.preventDefault();
@@ -80,10 +88,15 @@ const Header = () => {
                         Camera24h<span>.Shop</span>
                     </Link>
                     
-                    <div className="search-box">
-                        <input type="text" placeholder="Tìm kiếm máy ảnh, ống kính, phụ kiện..." />
-                        <button><i className="fa-solid fa-magnifying-glass"></i> Tìm kiếm</button>
-                    </div>
+                    <form className="search-box" onSubmit={handleSearch}>
+                        <input 
+                            type="text" 
+                            placeholder="Tìm kiếm máy ảnh, ống kính, phụ kiện..." 
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                        <button type="submit"><i className="fa-solid fa-magnifying-glass"></i> Tìm kiếm</button>
+                    </form>
 
                     <div className="cart-icon" onClick={toggleCart}>
                         <i className="fa-solid fa-cart-shopping"></i>

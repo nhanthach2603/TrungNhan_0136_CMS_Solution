@@ -63,11 +63,10 @@ const ProductDetailPage = () => {
 
     const handleAddComboToCart = () => {
         if (!product) return;
-        // Add main product
+        if (product.stockQuantity <= 0) return;
         addToCart(product, quantity);
-        // Add checked recommendations
         recommendations.forEach(item => {
-            if (buyWithItems[item.id]) {
+            if (buyWithItems[item.id] && item.stockQuantity > 0) {
                 addToCart(item, 1);
             }
         });
@@ -179,7 +178,8 @@ const ProductDetailPage = () => {
                                         />
                                         <button 
                                             type="button"
-                                            onClick={() => setQuantity(prev => prev + 1)}
+                                            onClick={() => setQuantity(prev => Math.min(product.stockQuantity, prev + 1))}
+                                            disabled={quantity >= product.stockQuantity}
                                         >
                                             <i className="fa-solid fa-plus"></i>
                                         </button>
@@ -190,18 +190,18 @@ const ProductDetailPage = () => {
                                     <button 
                                         className="btn btn-warning btn-lg font-weight-bold text-white btn-add-cart-detail"
                                         onClick={() => addToCart(product, quantity)}
-                                        style={{ background: 'var(--mint)', borderColor: 'var(--mint)', display: 'flex', alignItems: 'center', gap: '8px' }}
+                                        disabled={product.stockQuantity <= 0}
+                                        style={{ background: 'var(--mint)', borderColor: 'var(--mint)', display: 'flex', alignItems: 'center', gap: '8px', opacity: product.stockQuantity <= 0 ? 0.5 : 1 }}
                                     >
-                                        <i className="fa-solid fa-cart-plus"></i> THÊM VÀO GIỎ HÀNG
+                                        <i className="fa-solid fa-cart-plus"></i> {product.stockQuantity <= 0 ? 'HẾT HÀNG' : 'THÊM VÀO GIỎ HÀNG'}
                                     </button>
                                     <button 
                                         className="btn btn-danger btn-lg font-weight-bold btn-buy-now-detail"
-                                        onClick={() => {
-                                            addToCart(product, quantity);
-                                        }}
-                                        style={{ background: 'var(--red)', borderColor: 'var(--red)', marginLeft: '12px' }}
+                                        onClick={() => addToCart(product, quantity)}
+                                        disabled={product.stockQuantity <= 0}
+                                        style={{ background: 'var(--red)', borderColor: 'var(--red)', marginLeft: '12px', opacity: product.stockQuantity <= 0 ? 0.5 : 1 }}
                                     >
-                                        MUA NGAY GIAO LIỀN 2H
+                                        {product.stockQuantity <= 0 ? 'HẾT HÀNG' : 'MUA NGAY GIAO LIỀN 2H'}
                                     </button>
                                 </div>
                             </div>

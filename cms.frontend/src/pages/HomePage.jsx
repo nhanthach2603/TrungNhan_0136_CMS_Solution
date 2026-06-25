@@ -271,6 +271,17 @@ const HomePage = () => {
                                 ))}
                             </div>
 
+                            {/* NEWEST PRODUCTS */}
+                            <div className="section-title-center mt-5">
+                                <h2>SẢN PHẨM MỚI NHẤT</h2>
+                                <div className="accent-line"></div>
+                            </div>
+                            <div className="product-grid">
+                                {[...products].sort((a, b) => b.id - a.id).slice(0, 8).map((item) => (
+                                    <ProductCard key={`newest-${item.id}`} item={item} badge="Mới" showDetailIcon />
+                                ))}
+                            </div>
+
                             {/* DYNAMIC CATEGORY BLOCKS */}
                             {categories.map(cat => {
                                 const catProducts = products.filter(p => p.categoryProductId === cat.id);

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import DOMPurify from 'dompurify';
 import blogService from '../services/blogService';
 import LoadingSpinner from '../components/LoadingSpinner';
 import BreadcrumbNav from '../components/BreadcrumbNav';
@@ -74,7 +75,10 @@ const PostDetailPage = () => {
 
                         <div className="post-content-body">
                             {post.content ? (
-                                <div style={{ whiteSpace: 'pre-line' }}>{post.content}</div>
+                                <div
+                                    className="post-content-html"
+                                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
+                                />
                             ) : (
                                 <p className="text-muted">Nội dung chi tiết của bài viết đang được biên tập...</p>
                             )}

@@ -12,6 +12,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import OrderHistoryPage from './pages/OrderHistoryPage';
 import BlogPage from './pages/BlogPage';
+import SearchResultsPage from './pages/SearchResultsPage';
 import './App.css';
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
                             <Route path="/register" element={<RegisterPage />} />
                             <Route path="/account/orders" element={<OrderHistoryPage />} />
                             <Route path="/blog" element={<BlogPage />} />
+                            <Route path="/search" element={<SearchResultsPage />} />
                             </Routes>
                         </div>
                         <Footer />

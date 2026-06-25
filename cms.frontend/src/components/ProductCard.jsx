@@ -36,8 +36,12 @@ const ProductCard = ({ item, badge = null, showDetailIcon = false }) => {
                     <Link to={`/product/${item.id}`} className="btn-detail">
                         {showDetailIcon && <i className="fa-solid fa-eye"></i>} Chi tiết
                     </Link>
-                    <button className="btn-buy" onClick={() => addToCart(item, 1)}>
-                        <i className="fa-solid fa-cart-plus"></i> Mua ngay
+                    <button 
+                        className="btn-buy" 
+                        onClick={() => addToCart(item, 1)}
+                        disabled={item.stockQuantity <= 0}
+                    >
+                        <i className="fa-solid fa-cart-plus"></i> {item.stockQuantity <= 0 ? 'Hết hàng' : 'Mua ngay'}
                     </button>
                 </div>
             </div>
