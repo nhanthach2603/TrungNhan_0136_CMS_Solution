@@ -7,7 +7,7 @@
 
 | Họ tên | Mã SV | Lớp |
 |--------|-------|-----|
-| Trần Trung Nhân | 2123110136 | 24DTH26 |
+| Trần Trung Nhân | 2123110136 | CCQ2311C |
 
 **Giảng viên hướng dẫn:** Ths. Nguyễn Cao Thái
 
